@@ -9,7 +9,7 @@
       "outDir": "dist",
       "assets": "assets",
       "index": "index.html",
-      "main": "main.ts",
+      "main": "main-polymer.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.json",
       "prefix": "app",
@@ -17,7 +17,9 @@
       "styles": [
         "styles.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "assets/bower_components/webcomponentsjs/webcomponents-lite.min.js"
+      ],
       "environments": {
         "source": "environments/environment.ts",
         "dev": "environments/environment.ts",

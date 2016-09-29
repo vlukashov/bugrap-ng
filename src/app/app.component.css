@@ -1,0 +1,5 @@
+paper-input,
+vaadin-combo-box {
+  background: var(--paper-grey-200);
+  padding: 8px;
+}

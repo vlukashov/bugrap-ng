@@ -1,0 +1,27 @@
+{
+  "name": "bugrap-ng",
+  "description": "A sample web application built with Angular 2 and Vaadin Elements.",
+  "main": "index.html",
+  "authors": [
+    "Viktor Lukashov <viktor@vaadin.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Vaadin Elements",
+    "Polymer",
+    "Angular2"
+  ],
+  "homepage": "https://github.com/vlukashov/bugrap-ng",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "paper-elements": "^1.0.7",
+    "vaadin-grid": "^1.1.2",
+    "vaadin-combo-box": "^1.1.4"
+  }
+}

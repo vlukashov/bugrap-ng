@@ -2,6 +2,7 @@
 
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('App: BugrapNg', () => {
   beforeEach(() => {
@@ -9,6 +10,7 @@ describe('App: BugrapNg', () => {
       declarations: [
         AppComponent
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
   });
 
@@ -29,5 +31,15 @@ describe('App: BugrapNg', () => {
     fixture.detectChanges();
     let compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('h1').textContent).toContain('app works!');
+  }));
+
+  it('vaadin-combo-box and paper-input should have an initial value of 4', async(() => {
+    let fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    let compiled = fixture.debugElement.nativeElement;
+    let combobox = compiled.querySelector('vaadin-combo-box');
+    let input = compiled.querySelector('paper-input');
+    expect(combobox.value).toEqual('4');
+    expect(input.value).toEqual('4');
   }));
 });
