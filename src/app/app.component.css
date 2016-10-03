@@ -1,5 +1,197 @@
-paper-input,
-vaadin-combo-box {
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background: var(--paper-grey-200);
-  padding: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #cecece;
+  padding: 0 8px;
+}
+
+.header__combobox {
+  flex: 1 1 0;
+}
+
+.menubar__search {
+  flex: 1 1 0;
+  margin-left: 8px;
+}
+
+.badge {
+  background: #f09300;
+  padding: 5px 8px;
+  border-radius: 20px;
+  height: 20px;
+  min-width: 20px;
+  text-align: center;
+  margin-left: 8px;
+}
+
+.versionbar {
+  align-items: flex-end;
+}
+
+/**
+ * TODO: move into a new 'bugrap-button-bar' component
+ */
+.button-bar {
+  display: flex;
+}
+
+.button-bar > paper-button {
+  margin-left: 0;
+  margin-right: 0;
+  padding-right: 12px;
+}
+
+.button-bar > paper-button:not(:first-child) {
+  border-left: 1px solid #cecece;
+}
+/* end of the 'bugrap-button-bar' componen */
+
+
+/**
+ * TODO: move into a new 'bugrap-counts-gauge' component
+ * TODO: add parameters 'first', 'second' and 'third' (or--more generically--via an 'elements' array)
+ */
+.counts {
+  display: flex;
+  flex: 1;
+  margin-left: 8px;
+  font-size: 16px;
+  line-height: 24px;
+  padding-bottom: 8px;
+}
+
+.counts__first {
+  flex: 5;
+  color: white;
+  background: #37474F;
+  padding-left: 14px;
+  padding-right: 8px;
+  border-radius: 20px 0 0 20px;
+}
+
+.counts__second {
+  flex: 15;
+  color: white;
+  background: #80cbc4;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.counts__third {
+  flex: 180;
+  background: #c6e6e3;
+  padding-left: 8px;
+  padding-right: 14px;
+  border-radius: 0 20px 20px 0;
+}
+/* end of 'bugrap-counts-gauge' */
+
+
+.filters {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.filters > .button-group:not(:first-child) {
+  margin-left: 24px;
+}
+
+/**
+ * TODO: figure out why adding classes to polymer elements like paper-button breaks the default styling
+ * TODO: set styles via BEM-like classes on polymer elements
+ * TODO: move into a new 'bugrap-toggle-button-group' component
+ */
+.button-group {
+  display: flex;
+  align-items: center;
+}
+
+.button-group__label {
+  padding-right: 8px;
+}
+
+.status__button,
+.status__button--last,
+.button-group > paper-button {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.status__button--last,
+.button-group:not(.status) > paper-button:last-of-type {
+  border-radius: 0 20px 20px 0;
+}
+
+.button-group > paper-button {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.status__button--last {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.button-group > paper-button:first-of-type {
+  border-radius: 20px 0 0 20px;
+}
+
+.status paper-menu-button {
+  padding: 0;
+}
+/* end of 'bugrap-toggle-button-group' component */
+
+
+.status__option {
+  display: block;
+  padding: 4px 8px;
+}
+
+.status__option:first-of-type {
+  padding-bottom: 12px;
+}
+
+vaadin-split-layout {
+  flex: 1;
+}
+
+.split-top,
+.split-bottom {
+  display: flex;
+  flex-direction: column;
+}
+
+vaadin-grid {
+  flex: initial;
+}
+
+.ticket {
+  background: #ffffff;
+  padding: 8px 8px 8px 30px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.split-bottom .row {
+  border-top: 0;
+}
+
+.ticket__reporter {
+  margin-left: -30px;
+  font-size: 80%;
+  color: #333333;
+}
+
+.ticket__description {
+  border: 0;
+  width: 100%;
+  flex: 1;
 }
