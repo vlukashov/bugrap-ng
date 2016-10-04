@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 
-import { BugrapTicket, BugrapTicketStatus } from './bugrap-ticket';
+import {BugrapTicket, BugrapTicketStatus, BugrapTicketType } from './bugrap-ticket';
 import * as MockData from './bugrap-mock-data';
 
 @Component({
@@ -30,16 +30,20 @@ export class AppComponent implements AfterViewInit {
   }
 
   gridReady(grid: any) {
+    grid.columns[1].renderer = (cell: any) => {
+      cell.element.innerHTML = BugrapTicketType[cell.data];
+    };
+
     let dateRenderer = (cell: any) => {
       let now = moment();
       let date = moment(cell.data);
       cell.element.innerHTML = date.isValid() ? date.from(now) : '';
     };
 
-    grid.addEventListener('selected-items-changed', () => this.onSelectionChange(grid));
-
     grid.columns[4].renderer = dateRenderer;
     grid.columns[5].renderer = dateRenderer;
+
+    grid.addEventListener('selected-items-changed', () => this.onSelectionChange(grid));
     grid.selection.select(1);
   }
 
