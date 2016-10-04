@@ -8,7 +8,7 @@
 
 <div class="row menubar">
   <div class="button-bar">
-    <paper-button class="my-custom-button"><iron-icon icon="icons:bug-report"></iron-icon>Report a bug</paper-button>
+    <paper-button><iron-icon icon="icons:bug-report"></iron-icon>Report a bug</paper-button>
     <paper-button><iron-icon icon="icons:lightbulb-outline"></iron-icon>Request a feature</paper-button>
     <paper-button>
       <iron-icon icon="icons:settings"></iron-icon>
@@ -46,14 +46,14 @@
         <iron-icon icon="icons:expand-more"></iron-icon>
       </paper-button>
       <paper-menu class="dropdown-content" multi>
-        <paper-checkbox *ngFor="let value of STATUS_VALUES" class="status__option">{{ value }}</paper-checkbox>
+        <paper-checkbox *ngFor="let status of STATUS_CHOICES" class="status__option" [value]="status.value">{{ status.label }}</paper-checkbox>
       </paper-menu>
     </paper-menu-button>
   </div>
 </div>
 
 <vaadin-split-layout vertical>
-  <vaadin-grid #grid [items]="tickets" selection-mode="multi" (selected-items-changed)="onSelectionChange($event)">
+  <vaadin-grid #grid [items]="tickets" selection-mode="multi">
     <table>
       <colgroup>
         <col name="priority" sortable />
@@ -74,11 +74,11 @@
     </div>
 
     <div class="row">
-      <vaadin-combo-box label="Priority" [(value)]="ticket.priority" [items]="PRIORITY_VALUES"></vaadin-combo-box>
-      <vaadin-combo-box label="Type" [(value)]="ticket.type" [items]="TYPE_VALUES"></vaadin-combo-box>
-      <vaadin-combo-box label="Status" [(value)]="ticket.status" [items]="STATUS_VALUES"></vaadin-combo-box>
+      <vaadin-combo-box label="Priority" [(value)]="ticket.priority" [items]="PRIORITY_CHOICES"></vaadin-combo-box>
+      <vaadin-combo-box label="Type" [(value)]="ticket.type" [items]="TYPE_CHOICES"></vaadin-combo-box>
+      <vaadin-combo-box label="Status" [(value)]="ticket.status" [items]="STATUS_CHOICES"></vaadin-combo-box>
       <vaadin-combo-box label="Assigned to" [(value)]="ticket.assigned_to" [items]="ASSIGNED_TO_VALUES"></vaadin-combo-box>
-      <vaadin-combo-box label="Version" [(value)]="ticket.version" [items]="versions"></vaadin-combo-box>
+      <vaadin-combo-box label="Version" [(value)]="ticket.version" [items]="VERSION_VALUES"></vaadin-combo-box>
       <paper-button raised>Update</paper-button>
       <paper-button raised>Revert</paper-button>
     </div>
