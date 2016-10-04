@@ -1,0 +1,24 @@
+<div class="row">
+  <paper-toolbar>
+    <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
+    <span class="title">{{ ticket.summary }}</span>
+  </paper-toolbar>
+</div>
+
+<div class="row">
+  <vaadin-combo-box label="Priority" [(value)]="ticket.priority" [items]="PRIORITY_CHOICES"></vaadin-combo-box>
+  <vaadin-combo-box label="Type" [(value)]="ticket.type" [items]="TYPE_CHOICES"></vaadin-combo-box>
+  <vaadin-combo-box label="Status" [(value)]="ticket.status" [items]="STATUS_CHOICES"></vaadin-combo-box>
+  <vaadin-combo-box label="Assigned to" [(value)]="ticket.assigned_to" [items]="ASSIGNED_TO_VALUES"></vaadin-combo-box>
+  <vaadin-combo-box label="Version" [(value)]="ticket.version" [items]="VERSION_VALUES"></vaadin-combo-box>
+  <paper-button raised>Update</paper-button>
+  <paper-button raised>Revert</paper-button>
+</div>
+
+<section class="ticket">
+  <div class="row ticket__reporter">
+    <iron-icon icon="social:person"></iron-icon>
+    <span>{{ ticket.reported_by }} ({{ ticket.reported | amTimeAgo }})</span>
+  </div>
+  <textarea class="ticket__description">{{ ticket.description }}</textarea>
+</section>

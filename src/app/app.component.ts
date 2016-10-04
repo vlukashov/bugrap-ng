@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 
-import { BugrapTicket, BugrapTicketStatus, BugrapTicketPriority, BugrapTicketType } from './bugrap-ticket';
+import { BugrapTicket, BugrapTicketStatus } from './bugrap-ticket';
 import * as MockData from './bugrap-mock-data';
 
 @Component({
@@ -12,12 +12,7 @@ import * as MockData from './bugrap-mock-data';
 export class AppComponent implements AfterViewInit {
   @ViewChild('grid') grid: any;
   user = MockData.getCurrentUser();
-  TYPE_CHOICES = BugrapTicketType.getValueLabelPairs();
   STATUS_CHOICES = BugrapTicketStatus.getValueLabelPairs();
-  PRIORITY_CHOICES = BugrapTicketPriority.getValueLabelPairs();
-
-  VERSION_VALUES = MockData.getProjectVersions();
-  ASSIGNED_TO_VALUES = MockData.getUserNames();
 
   projects = MockData.getProjectsNames();
   project = this.projects[0];

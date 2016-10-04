@@ -162,36 +162,12 @@ vaadin-split-layout {
   flex: 1;
 }
 
-.split-top,
-.split-bottom {
-  display: flex;
-  flex-direction: column;
-}
-
 vaadin-grid {
   flex: initial;
 }
 
-.ticket {
-  background: #ffffff;
-  padding: 8px 8px 8px 30px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.split-bottom .row {
-  border-top: 0;
-}
-
-.ticket__reporter {
-  margin-left: -30px;
-  font-size: 80%;
-  color: #333333;
-}
-
-.ticket__description {
-  border: 0;
-  width: 100%;
+bugrap-ticket-editor {
   flex: 1;
 }
+
+vaadin-split-layout.maximized vaadin-grid {  height: 100%; }
