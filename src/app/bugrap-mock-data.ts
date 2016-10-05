@@ -1,15 +1,11 @@
 import * as moment from 'moment';
 import { BugrapTicketPriority, BugrapTicketType, BugrapTicketStatus, BugrapTicket } from './bugrap-ticket';
 
-export function getUserNames() {
+export function getUserNames(): string[] {
   return [ 'Marc Manager', 'Hank Backwoodling', 'Joe Employee', 'Lucie Customer' ];
 }
 
-export function getCurrentUser() {
-  return { name: getUserNames()[0] };
-}
-
-export function getProjectsNames() {
+export function getProjectsNames(): string[] {
   return [
     'Project name that is rather long pellentesque habitant mobi',
     'Yet Another Project (CLOSED, DO NOT USE)',
@@ -23,13 +19,14 @@ export function getProjectsNames() {
   ];
 }
 
-export function getProjectVersions() {
-  return ['All versions', '1.2.3-pre12', '1.3'];
+export function getProjectVersions(): string[] {
+  return [ '1.2.3-pre12', '1.3' ];
 }
 
-export function getTickets() {
+export function getTickets(): BugrapTicket[] {
   return <BugrapTicket[]> [
     {
+      id: "1",
       project: "Project name that is rather long pellentesque habitant mobi",
       version: "1.2.3-pre12",
       type: BugrapTicketType.Bug,
@@ -43,6 +40,7 @@ export function getTickets() {
       assigned_to: "Marc Manager"
     },
     {
+      id: "2",
       project: "Project name that is rather long pellentesque habitant mobi",
       version: "1.2.3-pre12",
       type: BugrapTicketType.Bug,
@@ -56,6 +54,7 @@ export function getTickets() {
       assigned_to: "Marc Manager"
     },
     {
+      id: "3",
       project: "Project name that is rather long pellentesque habitant mobi",
       version: "1.2.3-pre12",
       type: BugrapTicketType.Feature,
@@ -69,6 +68,7 @@ export function getTickets() {
       assigned_to: "Marc Manager"
     },
     {
+      id: "4",
       project: "Project name that is rather long pellentesque habitant mobi",
       version: "1.2.3-pre12",
       type: BugrapTicketType.Bug,

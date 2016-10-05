@@ -59,6 +59,7 @@ export namespace BugrapTicketPriority {
 }
 
 export class BugrapTicket {
+  id: string;
   project: string;
   version: string;
   type: BugrapTicketType;

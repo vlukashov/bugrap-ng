@@ -7,6 +7,7 @@ import { MomentModule } from 'angular2-moment';
 
 import { AppComponent } from './app.component';
 import { BugrapTicketEditorComponent } from './bugrap-ticket-editor/bugrap-ticket-editor.component';
+import { BugrapBackendService } from './bugrap-backend.service';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { BugrapTicketEditorComponent } from './bugrap-ticket-editor/bugrap-ticke
     PolymerElement('paper-menu'),
     PolymerElement('paper-menu-button'),
     PolymerElement('paper-checkbox'),
+    PolymerElement('paper-toolbar'),
     PolymerElement('iron-icon'),
     PolymerElement('vaadin-combo-box'),
     PolymerElement('vaadin-grid'),
@@ -28,7 +30,7 @@ import { BugrapTicketEditorComponent } from './bugrap-ticket-editor/bugrap-ticke
     HttpModule,
     MomentModule
   ],
-  providers: [],
+  providers: [ BugrapBackendService ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

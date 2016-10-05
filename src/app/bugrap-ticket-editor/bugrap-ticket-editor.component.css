@@ -9,6 +9,13 @@
   padding: 0 8px;
 }
 
+.subtitle {
+  font-size: 0.64em;
+  padding-top: 0.3rem;
+  padding-bottom: 0.1rem;
+  color: #9a9a9a;
+}
+
 .ticket {
   background: #ffffff;
   padding: 8px 8px 8px 30px;

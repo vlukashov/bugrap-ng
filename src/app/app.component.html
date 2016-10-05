@@ -52,7 +52,7 @@
   </div>
 </div>
 
-<vaadin-split-layout vertical [ngClass]="{'maximized': ticket === null}">
+<vaadin-split-layout vertical [ngClass]="{'maximized': selectedTickets.length == 0}">
   <vaadin-grid #grid [items]="tickets" selection-mode="multi">
     <table>
       <colgroup>
@@ -65,5 +65,5 @@
       </colgroup>
     </table>
   </vaadin-grid>
-  <bugrap-ticket-editor *ngIf="ticket != null" [ticket]="ticket"></bugrap-ticket-editor>
+  <bugrap-ticket-editor *ngIf="selectedTickets.length > 0" [tickets]="selectedTickets" (tickets-edited)="refreshTickets()"></bugrap-ticket-editor>
 </vaadin-split-layout>

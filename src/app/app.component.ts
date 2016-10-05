@@ -1,27 +1,38 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, OnInit, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 
-import {BugrapTicket, BugrapTicketStatus, BugrapTicketType } from './bugrap-ticket';
-import * as MockData from './bugrap-mock-data';
+import { BugrapTicket, BugrapTicketStatus, BugrapTicketType } from './bugrap-ticket';
+import { BugrapBackendService } from './bugrap-backend.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('grid') grid: any;
-  user = MockData.getCurrentUser();
+
   STATUS_CHOICES = BugrapTicketStatus.getValueLabelPairs();
 
-  projects = MockData.getProjectsNames();
-  project = this.projects[0];
+  user: any;
+  projects: string[];
+  project: string;
+  versions: string[];
+  version: string;
+  tickets: BugrapTicket[];
+  selectedTickets: BugrapTicket[] = [];
 
-  versions = MockData.getProjectVersions();
-  version = this.versions[1];
+  constructor(private backend: BugrapBackendService) {}
 
-  tickets: BugrapTicket[] = MockData.getTickets();
-  ticket: BugrapTicket = this.tickets[1];
+  ngOnInit() {
+    this.user = this.backend.getCurrentUser();
+    this.projects = this.backend.getProjects();
+    this.project = this.projects[0];
+    this.versions = this.backend.getVersions();
+    this.versions.unshift('All versions');
+    this.version = this.versions[0];
+    this.tickets = this.backend.getTickets();
+  }
 
   ngAfterViewInit() {
     this.grid.nativeElement.then(() => {
@@ -29,8 +40,8 @@ export class AppComponent implements AfterViewInit {
     });
   }
 
-  gridReady(grid: any) {
-    grid.columns[1].renderer = (cell: any) => {
+  gridReady(gridElem: any) {
+    gridElem.columns[1].renderer = (cell: any) => {
       cell.element.innerHTML = BugrapTicketType[cell.data];
     };
 
@@ -40,19 +51,26 @@ export class AppComponent implements AfterViewInit {
       cell.element.innerHTML = date.isValid() ? date.from(now) : '';
     };
 
-    grid.columns[4].renderer = dateRenderer;
-    grid.columns[5].renderer = dateRenderer;
+    gridElem.columns[4].renderer = dateRenderer;
+    gridElem.columns[5].renderer = dateRenderer;
 
-    grid.addEventListener('selected-items-changed', () => this.onSelectionChange(grid));
-    grid.selection.select(1);
+    gridElem.addEventListener('selected-items-changed', () => this.onSelectionChange(gridElem));
+    gridElem.selection.select(1);
   }
 
   onSelectionChange(grid: any) {
     let selected = grid.selection.selected();
-    if (!isNaN(selected[0])) {
-      this.ticket = this.tickets[selected[0]];
-    } else {
-      this.ticket = null;
-    }
+    this.selectedTickets = this.tickets.filter((_, index) => {
+      return selected.indexOf(index) > -1;
+    });
+  }
+
+  refreshTickets() {
+    let gridElem = this.grid.nativeElement;
+    let selected = gridElem.selection.selected().slice(0);
+    this.tickets = this.backend.getTickets();
+    gridElem.then(() => {
+      selected.forEach(selectedItemIndex => gridElem.selection.select(selectedItemIndex));
+    });
   }
 }
