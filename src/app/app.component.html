@@ -6,64 +6,12 @@
   </div>
 </div>
 
-<div class="row menubar">
-  <div class="button-bar">
-    <paper-button><iron-icon icon="icons:bug-report"></iron-icon>Report a bug</paper-button>
-    <paper-button><iron-icon icon="icons:lightbulb-outline"></iron-icon>Request a feature</paper-button>
-    <paper-button>
-      <iron-icon icon="icons:settings"></iron-icon>
-      Manage project
-      <span class="badge">42</span>
-    </paper-button>
-  </div>
-  <paper-input class="menubar__search" no-label-float label="Search" type="search">
-    <paper-icon-button suffix icon="icons:search" alt="search" title="search"></paper-icon-button>
-  </paper-input>
-</div>
-
-<div class="row versionbar">
-  <vaadin-combo-box label="Reports for" [(value)]="version" [items]="versions"></vaadin-combo-box>
-  <div class="counts">
-    <span class="counts__first">5</span>
-    <span class="counts__second">15</span>
-    <span class="counts__third">180</span>
-  </div>
-</div>
-
-<div class="row filters">
-  <div class="button-group">
-    <label class="button-group__label">Assignees</label>
-    <paper-button raised toggles>Only me</paper-button>
-    <paper-button raised toggles>Everyone</paper-button>
-  </div>
-  <div class="button-group status">
-    <label class="button-group__label">Status</label>
-    <paper-button raised toggles>Open</paper-button>
-    <paper-button raised toggles>All kinds</paper-button>
-    <paper-menu-button ignore-select>
-      <paper-button raised toggles class="dropdown-trigger status__button--last">
-        <span>Custom</span>
-        <iron-icon icon="icons:expand-more"></iron-icon>
-      </paper-button>
-      <paper-menu class="dropdown-content" multi>
-        <paper-checkbox *ngFor="let status of STATUS_CHOICES" class="status__option" [value]="status.value">{{ status.label }}</paper-checkbox>
-      </paper-menu>
-    </paper-menu-button>
-  </div>
-</div>
-
 <vaadin-split-layout vertical [ngClass]="{'maximized': selectedTickets.length == 0}">
-  <vaadin-grid #grid [items]="tickets" selection-mode="multi">
-    <table>
-      <colgroup>
-        <col name="priority" sortable />
-        <col name="type" sortable />
-        <col name="summary" sortable resizable/>
-        <col name="assigned_to" sortable resizable/>
-        <col name="last_modified" sortable resizable/>
-        <col name="reported" sortable resizable />
-      </colgroup>
-    </table>
-  </vaadin-grid>
-  <bugrap-ticket-editor *ngIf="selectedTickets.length > 0" [tickets]="selectedTickets" (tickets-edited)="refreshTickets()"></bugrap-ticket-editor>
+  <bugrap-project-view #projectView [project]="project"
+                       (selected-tickets-changed)="onSelectedTicketsChanged($event)">
+  </bugrap-project-view>
+  <bugrap-ticket-editor #ticketEditor *ngIf="selectedTickets.length > 0"
+                        [tickets]="selectedTickets"
+                        (tickets-edited)="projectView.refreshTickets()">
+  </bugrap-ticket-editor>
 </vaadin-split-layout>
