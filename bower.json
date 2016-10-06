@@ -20,7 +20,8 @@
     "tests"
   ],
   "dependencies": {
-    "paper-elements": "^1.0.7",
+    "iron-elements": "PolymerElements/iron-elements#^1.0.10",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.7",
     "vaadin-grid": "^1.1.2",
     "vaadin-combo-box": "^1.1.4",
     "vaadin-split-layout": "^0.1.0"

@@ -1,5 +1,15 @@
+<paper-dialog #dialog *ngIf="!modal" modal>
+  <paper-dialog-scrollable>
+    <bugrap-ticket-editor modal="true" [tickets]="tickets" (tickets-edited)="ticketsEdited.emit($event)"></bugrap-ticket-editor>
+  </paper-dialog-scrollable>
+  <div class="buttons">
+    <paper-button dialog-dismiss>Cancel</paper-button>
+    <paper-button dialog-confirm autofocus>OK</paper-button>
+  </div>
+</paper-dialog>
+
 <paper-toolbar>
-  <paper-icon-button *ngIf="!batchMode" icon="icons:open-in-new"></paper-icon-button>
+  <paper-icon-button *ngIf="!batchMode && !modal" icon="icons:open-in-new" (click)="dialog.nativeElement.open()"></paper-icon-button>
   <span *ngIf="!batchMode" class="title">{{ ticket?.summary }}</span>
   <div *ngIf="batchMode" class="title">
     {{ tickets.length }} reports are selected

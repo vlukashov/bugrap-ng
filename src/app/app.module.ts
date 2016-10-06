@@ -17,6 +17,7 @@ import { BugrapBackendService } from './bugrap-backend.service';
     BugrapProjectViewComponent,
     BugrapTicketEditorComponent,
     PolymerElement('iron-icon'),
+
     PolymerElement('paper-material'),
     PolymerElement('paper-input'),
     PolymerElement('paper-button'),
@@ -25,6 +26,8 @@ import { BugrapBackendService } from './bugrap-backend.service';
     PolymerElement('paper-menu-button'),
     PolymerElement('paper-checkbox'),
     PolymerElement('paper-toolbar'),
+    PolymerElement('paper-dialog'),
+    PolymerElement('paper-dialog-scrollable'),
 
     PolymerElement('vaadin-combo-box'),
     PolymerElement('vaadin-grid'),
