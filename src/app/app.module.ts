@@ -16,13 +16,16 @@ import { BugrapBackendService } from './bugrap-backend.service';
     AppComponent,
     BugrapProjectViewComponent,
     BugrapTicketEditorComponent,
+    PolymerElement('iron-icon'),
+    PolymerElement('paper-material'),
     PolymerElement('paper-input'),
     PolymerElement('paper-button'),
+    PolymerElement('paper-icon-button'),
     PolymerElement('paper-menu'),
     PolymerElement('paper-menu-button'),
     PolymerElement('paper-checkbox'),
     PolymerElement('paper-toolbar'),
-    PolymerElement('iron-icon'),
+
     PolymerElement('vaadin-combo-box'),
     PolymerElement('vaadin-grid'),
     PolymerElement('vaadin-split-layout')

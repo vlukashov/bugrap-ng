@@ -1,15 +1,13 @@
+@import "../shared/mixins";
+
+@mixin view-row {
+  padding: 0 8px;
+  border-top: 1px solid var(--paper-grey-400);
+}
+
 :host {
   display: flex;
   flex-direction: column;
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border-top: 1px solid #cecece;
-  padding: 0 8px;
-  flex-shrink: 0;
 }
 
 .badge {
@@ -22,33 +20,29 @@
   margin-left: 8px;
 }
 
-.menubar__search {
-  flex: 1;
+.actions-row {
+  @include bugrap-row;
+  @include view-row;
+}
+
+.actions-row__search {
+  flex: 1 1 320px;
   margin-left: 8px;
 }
 
-.versionbar {
+.version-row {
+  @include bugrap-row;
+  @include view-row;
   align-items: flex-end;
 }
 
-/**
- * TODO: move into a new 'bugrap-button-bar' component
- */
-.button-bar {
-  display: flex;
+paper-button {
+  flex-shrink: 0;
 }
 
-.button-bar > paper-button {
-  margin-left: 0;
-  margin-right: 0;
-  padding-right: 12px;
+paper-button:hover {
+  background-color: var(--paper-grey-300);
 }
-
-.button-bar > paper-button:not(:first-child) {
-  border-left: 1px solid #cecece;
-}
-/* end of the 'bugrap-button-bar' componen */
-
 
 /**
  * TODO: move into a new 'bugrap-counts-gauge' component
@@ -90,12 +84,13 @@
 /* end of 'bugrap-counts-gauge' */
 
 
-.filters {
-  padding-top: 8px;
-  padding-bottom: 8px;
+.filters-row {
+  @include bugrap-row;
+  @include view-row;
+  padding: 8px 8px;
 }
 
-.filters > .button-group:not(:first-child) {
+.filters-row > .button-group:not(:first-child) {
   margin-left: 24px;
 }
 

@@ -8,7 +8,7 @@ import {BugrapBackendService} from "../bugrap-backend.service";
 @Component({
   selector: 'bugrap-project-view',
   templateUrl: './bugrap-project-view.component.html',
-  styleUrls: [ './bugrap-project-view.component.css' ]
+  styleUrls: [ './bugrap-project-view.component.scss' ]
 })
 export class BugrapProjectViewComponent implements OnInit, AfterViewInit {
 

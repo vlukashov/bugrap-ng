@@ -1,10 +1,11 @@
-<div class="row header">
-  <vaadin-combo-box class="header__combobox" label="Select a project" [(value)]="project" [items]="projects"></vaadin-combo-box>
-  <div class="button-bar">
+<paper-material elevation="1">
+  <div class="header">
+    <vaadin-combo-box class="header__combobox" label="Select a project" [(value)]="project" [items]="projects"></vaadin-combo-box>
+    <div class="extender"></div>
     <paper-button><iron-icon icon="social:person"></iron-icon>{{ user.name }}</paper-button>
     <paper-button><iron-icon icon="icons:exit-to-app"></iron-icon>Logout</paper-button>
   </div>
-</div>
+</paper-material>
 
 <vaadin-split-layout vertical [ngClass]="{'maximized': selectedTickets.length == 0}">
   <bugrap-project-view #projectView [project]="project"

@@ -1,0 +1,42 @@
+@import "./shared/mixins";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 99%;
+  background: var(--paper-grey-200);
+}
+
+.header {
+  @include bugrap-row;
+  padding: 0 8px;
+  background: var(--paper-grey-300);
+}
+
+.header__combobox {
+  flex: 1 1 512px;
+}
+
+paper-button {
+  flex-shrink: 0;
+}
+
+paper-button:hover {
+  background-color: var(--paper-grey-400);
+}
+
+vaadin-split-layout {
+  flex: 1;
+}
+
+bugrap-project-view {
+  flex: initial;
+}
+
+vaadin-split-layout.maximized > bugrap-project-view {
+  height: 100%;
+}
+
+bugrap-ticket-editor {
+  flex: 1;
+}

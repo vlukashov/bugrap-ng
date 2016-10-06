@@ -1,19 +1,18 @@
-<div class="row menubar">
-  <div class="button-bar">
-    <paper-button><iron-icon icon="icons:bug-report"></iron-icon>Report a bug</paper-button>
-    <paper-button><iron-icon icon="icons:lightbulb-outline"></iron-icon>Request a feature</paper-button>
-    <paper-button>
-      <iron-icon icon="icons:settings"></iron-icon>
-      Manage project
-      <span class="badge">42</span>
-    </paper-button>
-  </div>
-  <paper-input class="menubar__search" no-label-float label="Search" type="search">
+<div class="actions-row">
+  <paper-button><iron-icon icon="icons:bug-report"></iron-icon>Report a bug</paper-button>
+  <paper-button><iron-icon icon="icons:lightbulb-outline"></iron-icon>Request a feature</paper-button>
+  <paper-button>
+    <iron-icon icon="icons:settings"></iron-icon>
+    Manage project
+    <span class="badge">42</span>
+  </paper-button>
+  <div class="extender"></div>
+  <paper-input class="actions-row__search" no-label-float label="Search" type="search">
     <paper-icon-button suffix icon="icons:search" alt="search" title="search"></paper-icon-button>
   </paper-input>
 </div>
 
-<div class="row versionbar">
+<div class="version-row">
   <vaadin-combo-box label="Reports for" [(value)]="version" [items]="versions"></vaadin-combo-box>
   <div class="counts">
     <span class="counts__first">5</span>
@@ -22,7 +21,7 @@
   </div>
 </div>
 
-<div class="row filters">
+<div class="filters-row">
   <div class="button-group">
     <label class="button-group__label">Assignees</label>
     <paper-button raised toggles>Only me</paper-button>

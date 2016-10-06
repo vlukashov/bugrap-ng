@@ -1,4 +1,4 @@
-import {Component, Input, Output, DoCheck, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, DoCheck, OnInit, EventEmitter } from '@angular/core';
 import { BugrapTicket, BugrapTicketType, BugrapTicketStatus, BugrapTicketPriority } from '../bugrap-ticket';
 import { BugrapBackendService } from '../bugrap-backend.service';
 
@@ -6,10 +6,10 @@ import { BugrapBackendService } from '../bugrap-backend.service';
 @Component({
   selector: 'bugrap-ticket-editor',
   templateUrl: './bugrap-ticket-editor.component.html',
-  styleUrls: ['./bugrap-ticket-editor.component.css']
+  styleUrls: ['./bugrap-ticket-editor.component.scss']
 })
 export class BugrapTicketEditorComponent implements DoCheck, OnInit {
-  @Input() tickets: BugrapTicket[];
+  @Input() tickets: BugrapTicket[] = [];
   @Output('tickets-edited') ticketsEdited: EventEmitter<any> = new EventEmitter();
 
   EDITABLE_PROPERTIES = ['priority', 'type', 'status', 'assigned_to', 'version'];
@@ -20,9 +20,9 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
 
   VERSION_VALUES: string[];
   ASSIGNED_TO_VALUES: string[];
-  batchMode: boolean;
+  batchMode: boolean = false;
   ticketIds: string[] = [];
-  ticket: BugrapTicket;
+  ticket: BugrapTicket = null;
 
   constructor(private backend: BugrapBackendService) {}
 
