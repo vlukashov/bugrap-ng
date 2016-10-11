@@ -19,7 +19,9 @@ import { BugrapBackendService } from './bugrap-backend.service';
     PolymerElement('iron-icon'),
 
     PolymerElement('paper-material'),
+    PolymerElement('paper-card'),
     PolymerElement('paper-input'),
+    PolymerElement('paper-textarea'),
     PolymerElement('paper-button'),
     PolymerElement('paper-icon-button'),
     PolymerElement('paper-menu'),

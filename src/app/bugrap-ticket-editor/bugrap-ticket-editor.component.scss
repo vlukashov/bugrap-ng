@@ -5,6 +5,31 @@
   flex-direction: column;
 }
 
+paper-dialog {
+  background: var(--paper-grey-200);
+}
+
+paper-dialog > .headline {
+  background: #3f51b5;
+  margin-top: -24px;
+  padding-left: 72px;
+  padding-top: 12px;
+  padding-bottom: 0;
+  color: rgba(255,255,255, 0.7);
+}
+
+.modal paper-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-top: -24px;
+}
+
+.modal form {
+  margin-top: 40px;
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -20,21 +45,17 @@
 }
 
 .ticket {
-  background: #ffffff;
-  padding: 8px 8px 8px 30px;
+  padding: 8px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .ticket__reporter {
-  margin-left: -30px;
-  font-size: 80%;
   color: #333333;
+  padding: 0 0 4px 0;
 }
 
 .ticket__description {
-  border: 0;
-  width: 100%;
-  flex: 1;
+  white-space: pre-wrap;
 }

@@ -1,36 +1,59 @@
 <paper-dialog #dialog *ngIf="!modal" modal>
+  <div class="headline">{{ ticket.project }} > {{ ticket.version }}</div>
   <paper-dialog-scrollable>
     <bugrap-ticket-editor modal="true" [tickets]="tickets" (tickets-edited)="ticketsEdited.emit($event)"></bugrap-ticket-editor>
   </paper-dialog-scrollable>
   <div class="buttons">
+    <paper-button>Attachments...</paper-button>
+    <div class="extender"></div>
     <paper-button dialog-dismiss>Cancel</paper-button>
-    <paper-button dialog-confirm autofocus>OK</paper-button>
+    <paper-button dialog-confirm autofocus>Done</paper-button>
   </div>
 </paper-dialog>
 
-<paper-toolbar>
-  <paper-icon-button *ngIf="!batchMode && !modal" icon="icons:open-in-new" (click)="dialog.nativeElement.open()"></paper-icon-button>
-  <span *ngIf="!batchMode" class="title">{{ ticket?.summary }}</span>
-  <div *ngIf="batchMode" class="title">
-    {{ tickets.length }} reports are selected
-    <div class="subtitle">(select a single report to view contents)</div>
-  </div>
-</paper-toolbar>
+<div [ngClass]="{'modal': modal}">
+  <paper-toolbar>
+    <paper-icon-button *ngIf="!batchMode && !modal" icon="icons:open-in-new" (click)="dialog.nativeElement.open()"></paper-icon-button>
+    <span *ngIf="!batchMode" class="title">{{ ticket?.summary }}</span>
+    <div *ngIf="batchMode" class="title">
+      {{ tickets.length }} reports are selected
+      <div class="subtitle">(select a single report to view contents)</div>
+    </div>
+  </paper-toolbar>
 
-<form #editorForm="ngForm" class="row">
-  <vaadin-combo-box label="Priority" name="priority" ngDefaultControl [(ngModel)]="ticket.priority" [items]="PRIORITY_CHOICES"></vaadin-combo-box>
-  <vaadin-combo-box label="Type" name="type" ngDefaultControl [(ngModel)]="ticket.type" [items]="TYPE_CHOICES"></vaadin-combo-box>
-  <vaadin-combo-box label="Status" name="status" ngDefaultControl [(ngModel)]="ticket.status" [items]="STATUS_CHOICES"></vaadin-combo-box>
-  <vaadin-combo-box label="Assigned to" name="assigned_to" ngDefaultControl [(ngModel)]="ticket.assigned_to" [items]="ASSIGNED_TO_VALUES"></vaadin-combo-box>
-  <vaadin-combo-box label="Version" name="version" ngDefaultControl [(ngModel)]="ticket.version" [items]="VERSION_VALUES"></vaadin-combo-box>
-  <paper-button raised (click)="update()" [disabled]="editorForm.form.untouched">Update</paper-button>
-  <paper-button raised (click)="revert()" [disabled]="editorForm.form.untouched">Revert</paper-button>
-</form>
+  <form #editorForm="ngForm" class="row">
+    <vaadin-combo-box label="Priority" name="priority" ngDefaultControl [(ngModel)]="ticket.priority" [items]="PRIORITY_CHOICES"></vaadin-combo-box>
+    <vaadin-combo-box label="Type" name="type" ngDefaultControl [(ngModel)]="ticket.type" [items]="TYPE_CHOICES"></vaadin-combo-box>
+    <vaadin-combo-box label="Status" name="status" ngDefaultControl [(ngModel)]="ticket.status" [items]="STATUS_CHOICES"></vaadin-combo-box>
+    <vaadin-combo-box label="Assigned to" name="assigned_to" ngDefaultControl [(ngModel)]="ticket.assigned_to" [items]="ASSIGNED_TO_VALUES"></vaadin-combo-box>
+    <vaadin-combo-box label="Version" name="version" ngDefaultControl [(ngModel)]="ticket.version" [items]="VERSION_VALUES"></vaadin-combo-box>
+    <paper-button raised (click)="update()" [disabled]="editorForm.form.untouched">Update</paper-button>
+    <paper-button raised (click)="revert()" [disabled]="editorForm.form.untouched">Revert</paper-button>
+  </form>
 
-<section *ngIf="!batchMode" class="ticket">
-  <div class="row ticket__reporter">
-    <iron-icon icon="social:person"></iron-icon>
-    <span>{{ ticket?.reported_by }} ({{ ticket?.reported | amTimeAgo }})</span>
-  </div>
-  <textarea class="ticket__description">{{ ticket?.description }}</textarea>
-</section>
+  <section *ngIf="!batchMode" class="ticket">
+    <div class="row ticket__reporter">
+      <iron-icon icon="social:person"></iron-icon>
+      <span>{{ ticket?.reported_by }} ({{ ticket?.reported | amTimeAgo }})</span>
+    </div>
+    <paper-card>
+      <div class="card-content ticket__description">{{ ticket?.description }}</div>
+    </paper-card>
+  </section>
+
+  <template [ngIf]="modal">
+    <section class="ticket" *ngFor="let comment of ticket.comments">
+      <div class="row ticket__reporter">
+        <iron-icon icon="social:person"></iron-icon>
+        <span>{{ comment.created_by }} ({{ comment.created | amTimeAgo }})</span>
+      </div>
+      <paper-card>
+        <div class="card-content ticket__description">{{ comment.description }}</div>
+      </paper-card>
+    </section>
+  </template>
+
+  <section *ngIf="modal" class="ticket">
+    <paper-textarea label="Add a new comment" placeholder="Start typing your comments here"></paper-textarea>
+  </section>
+</div>

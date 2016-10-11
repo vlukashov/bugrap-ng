@@ -58,6 +58,12 @@ export namespace BugrapTicketPriority {
   }
 }
 
+export class BugrapTicketComment {
+  created: Date;
+  created_by: string;
+  description: string;
+}
+
 export class BugrapTicket {
   id: string;
   project: string;
@@ -71,4 +77,5 @@ export class BugrapTicket {
   last_modified: Date;
   reported_by: string;
   assigned_to: string;
+  comments: BugrapTicketComment[];
 }

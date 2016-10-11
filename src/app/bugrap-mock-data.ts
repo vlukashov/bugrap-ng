@@ -37,7 +37,8 @@ export function getTickets(): BugrapTicket[] {
       reported: moment().subtract(15, 'minutes').toDate(),
       last_modified: null,
       reported_by: "Marc Manager",
-      assigned_to: "Marc Manager"
+      assigned_to: "Marc Manager",
+      comments: []
     },
     {
       id: "2",
@@ -51,7 +52,19 @@ export function getTickets(): BugrapTicket[] {
       reported: moment().subtract(2, 'hours').toDate(),
       last_modified: moment().subtract(30, 'minutes').toDate(),
       reported_by: "Hank Backwoodling",
-      assigned_to: "Marc Manager"
+      assigned_to: "Marc Manager",
+      comments: [
+        {
+          created: moment().subtract(1, 'hours').toDate(),
+          created_by: "Marc Manager",
+          description: "What am I supposed to do with this?"
+        },
+        {
+          created: moment().subtract(45, 'minutes').toDate(),
+          created_by: "Hank Backwoodling",
+          description: "Fix it as soon as possible.\nIf you need more information, please feel free to contact your local telepathy expert.\n\nBR,\nHank"
+        }
+      ]
     },
     {
       id: "3",
@@ -65,7 +78,8 @@ export function getTickets(): BugrapTicket[] {
       reported: moment().subtract(6, 'days').toDate(),
       last_modified: null,
       reported_by: "Marc Manager",
-      assigned_to: "Marc Manager"
+      assigned_to: "Marc Manager",
+      comments: []
     },
     {
       id: "4",
@@ -79,7 +93,8 @@ export function getTickets(): BugrapTicket[] {
       reported: moment().subtract(1, 'month').toDate(),
       last_modified: moment().subtract(2, 'weeks').toDate(),
       reported_by: "Marc Manager",
-      assigned_to: "Marc Manager"
+      assigned_to: "Marc Manager",
+      comments: []
     }
   ];
 }
