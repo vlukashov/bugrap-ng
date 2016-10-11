@@ -59,3 +59,40 @@ paper-dialog > .headline {
 .ticket__description {
   white-space: pre-wrap;
 }
+
+.attachments {
+  padding: 8px;
+  margin: 0 8px;
+  background: var(--paper-blue-grey-100);
+  border-radius: 4px;
+}
+
+.attachments__attachment {
+  display: inline-block;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.attachments__attachment > a {
+  text-decoration: none;
+}
+
+.attachments__attachment > paper-icon-button {
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  color: white;
+  visibility: hidden;
+}
+
+.attachments__attachment:hover {
+  background: var(--paper-blue-grey-400);
+}
+
+.attachments__attachment:hover > a {
+  color: white;
+}
+
+.attachments__attachment:hover > paper-icon-button {
+  visibility: visible;
+}

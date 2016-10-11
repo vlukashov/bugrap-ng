@@ -1,5 +1,8 @@
 import { Component, Input, Output, ViewChild, DoCheck, OnInit, EventEmitter, ElementRef } from '@angular/core';
-import { BugrapTicket, BugrapTicketType, BugrapTicketStatus, BugrapTicketPriority } from '../bugrap-ticket';
+import {
+  BugrapTicket, BugrapTicketType, BugrapTicketStatus, BugrapTicketPriority,
+  BugrapTicketAttachment
+} from '../bugrap-ticket';
 import { BugrapBackendService } from '../bugrap-backend.service';
 
 
@@ -13,6 +16,7 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
   @Input() tickets: BugrapTicket[] = [];
   @Output('tickets-edited') ticketsEdited: EventEmitter<any> = new EventEmitter();
   @ViewChild('dialog') dialog: ElementRef;
+  @ViewChild('modalEditor') modalEditor: any;
 
   EDITABLE_PROPERTIES = ['priority', 'type', 'status', 'assigned_to', 'version'];
 
@@ -98,6 +102,29 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
 
   revert() {
     this.refreshTickets();
+  }
+
+  onUploadCompleted($event) {
+    // add the uploaded file as a new attachment to the ticket being open in the modal editor
+    let file = $event.detail.file;
+    this.modalEditor.addAttachment(file);
+
+    // remove the uploaded file from the vaadin-upload control
+    let upload = $event.target;
+    upload.files = upload.files.filter(f => f !== file);
+  }
+
+  addAttachment(file) {
+    let attachment = new BugrapTicketAttachment();
+    attachment.name = file.name;
+    attachment.url = '/';
+    this.ticket.attachments.push(attachment);
+    this.backend.updateTicket(this.ticket);
+  }
+
+  removeAttachment(attachment: BugrapTicketAttachment) {
+    this.ticket.attachments = this.ticket.attachments.filter(att => att !== attachment);
+    this.backend.updateTicket(this.ticket);
   }
 
   private static _arrayEquals(arr1: Array<any>, arr2: Array<any>): boolean {

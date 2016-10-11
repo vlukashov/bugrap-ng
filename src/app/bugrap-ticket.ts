@@ -64,6 +64,11 @@ export class BugrapTicketComment {
   description: string;
 }
 
+export class BugrapTicketAttachment {
+  name: string;
+  url: string;
+}
+
 export class BugrapTicket {
   id: string;
   project: string;
@@ -78,4 +83,5 @@ export class BugrapTicket {
   reported_by: string;
   assigned_to: string;
   comments: BugrapTicketComment[];
+  attachments: BugrapTicketAttachment[];
 }

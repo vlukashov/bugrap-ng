@@ -33,7 +33,8 @@ import { BugrapBackendService } from './bugrap-backend.service';
 
     PolymerElement('vaadin-combo-box'),
     PolymerElement('vaadin-grid'),
-    PolymerElement('vaadin-split-layout')
+    PolymerElement('vaadin-split-layout'),
+    PolymerElement('vaadin-upload')
   ],
   imports: [
     BrowserModule,

@@ -38,7 +38,8 @@ export function getTickets(): BugrapTicket[] {
       last_modified: null,
       reported_by: "Marc Manager",
       assigned_to: "Marc Manager",
-      comments: []
+      comments: [],
+      attachments: []
     },
     {
       id: "2",
@@ -64,6 +65,11 @@ export function getTickets(): BugrapTicket[] {
           created_by: "Hank Backwoodling",
           description: "Fix it as soon as possible.\nIf you need more information, please feel free to contact your local telepathy expert.\n\nBR,\nHank"
         }
+      ],
+      attachments: [
+        { name: 'Ext JS menubar screenshot.png', url: '/' },
+        { name: 'Loremipsum.pdf', url: '/' },
+        { name: 'ZK screenshot.png', url: '/' }
       ]
     },
     {
@@ -79,7 +85,8 @@ export function getTickets(): BugrapTicket[] {
       last_modified: null,
       reported_by: "Marc Manager",
       assigned_to: "Marc Manager",
-      comments: []
+      comments: [],
+      attachments: []
     },
     {
       id: "4",
@@ -94,7 +101,8 @@ export function getTickets(): BugrapTicket[] {
       last_modified: moment().subtract(2, 'weeks').toDate(),
       reported_by: "Marc Manager",
       assigned_to: "Marc Manager",
-      comments: []
+      comments: [],
+      attachments: []
     }
   ];
 }
