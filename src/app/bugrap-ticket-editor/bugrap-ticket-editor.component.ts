@@ -35,10 +35,13 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
   ngOnInit() {
     this.VERSION_VALUES = this.backend.getVersions();
     this.ASSIGNED_TO_VALUES = this.backend.getUsers();
+
+    /*
     if (!this.modal)
       setTimeout(() => {
         this.dialog.nativeElement.open();
       });
+    */
   }
 
   ngDoCheck() {

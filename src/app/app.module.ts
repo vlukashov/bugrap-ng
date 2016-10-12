@@ -17,6 +17,7 @@ import { BugrapBackendService } from './bugrap-backend.service';
     BugrapProjectViewComponent,
     BugrapTicketEditorComponent,
     PolymerElement('iron-icon'),
+    PolymerElement('iron-dropdown'),
 
     PolymerElement('paper-material'),
     PolymerElement('paper-card'),
@@ -25,11 +26,12 @@ import { BugrapBackendService } from './bugrap-backend.service';
     PolymerElement('paper-button'),
     PolymerElement('paper-icon-button'),
     PolymerElement('paper-menu'),
-    PolymerElement('paper-menu-button'),
     PolymerElement('paper-checkbox'),
     PolymerElement('paper-toolbar'),
     PolymerElement('paper-dialog'),
     PolymerElement('paper-dialog-scrollable'),
+    PolymerElement('paper-tabs'),
+    PolymerElement('paper-tab'),
 
     PolymerElement('vaadin-combo-box'),
     PolymerElement('vaadin-grid'),

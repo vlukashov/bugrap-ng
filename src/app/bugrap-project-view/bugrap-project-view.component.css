@@ -1,10 +1,3 @@
-@import "../shared/mixins";
-
-@mixin view-row {
-  padding: 0 8px;
-  border-top: 1px solid var(--paper-grey-400);
-}
-
 :host {
   display: flex;
   flex-direction: column;
@@ -21,8 +14,13 @@
 }
 
 .actions-row {
-  @include bugrap-row;
-  @include view-row;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+
+  padding: 0 8px;
+  border-top: 1px solid var(--paper-grey-400);
 }
 
 .actions-row__search {
@@ -31,8 +29,12 @@
 }
 
 .version-row {
-  @include bugrap-row;
-  @include view-row;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+
+  padding: 0 8px;
+  border-top: 1px solid var(--paper-grey-400);
   align-items: flex-end;
 }
 
@@ -85,8 +87,12 @@ paper-button:hover {
 
 
 .filters-row {
-  @include bugrap-row;
-  @include view-row;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+
+  border-top: 1px solid var(--paper-grey-400);
   padding: 8px 8px;
 }
 
@@ -108,37 +114,45 @@ paper-button:hover {
   padding-right: 8px;
 }
 
-.status__button,
-.status__button--last,
-.button-group > paper-button {
-  margin-left: 0;
-  margin-right: 0;
+.button-group paper-material {
+  border-radius: 2px;
+  background: var(--paper-blue-grey-50);
 }
 
-.status__button--last,
-.button-group:not(.status) > paper-button:last-of-type {
-  border-radius: 0 20px 20px 0;
+.button-group paper-tabs {
+  --paper-tabs: {
+    height: 32px;
+    overflow: visible;
+  };
+
+  --paper-tabs-selection-bar: {
+    height: 100%;
+  };
+
+  --paper-tabs-selection-bar-color: var(--paper-blue-grey-100);
 }
 
-.button-group > paper-button {
-  padding-top: 5px;
-  padding-bottom: 5px;
+.button-group paper-tab {
+  --paper-tab-ink: var(--paper-blue-grey-100);
+  --paper-tab-content-unselected: {
+    opacity: 0.65;
+  };
 }
 
-.status__button--last {
-  padding-top: 3px;
-  padding-bottom: 3px;
+.button-group .button-tab {
+  --paper-tab: {
+    padding-right: 0;
+  };
 }
 
-.button-group > paper-button:first-of-type {
-  border-radius: 20px 0 0 20px;
-}
-
-.status paper-menu-button {
-  padding: 0;
+.button-group .button-tab > paper-icon-button {
+  --paper-icon-button: {
+    padding: 0;
+    width: 24px;
+    height: 24px;
+  };
 }
 /* end of 'bugrap-toggle-button-group' component */
-
 
 .status__option {
   display: block;

@@ -57,7 +57,7 @@
     <paper-textarea label="Add a new comment" placeholder="Start typing your comments here"></paper-textarea>
   </section>
 
-  <section *ngIf="modal && ticket.attachments.length > 0" class="attachments">
+  <section *ngIf="modal && ticket.attachments?.length > 0" class="attachments">
     <div class="attachments__attachment" *ngFor="let attachment of ticket.attachments">
       <a [href]="attachment.url" target="_blank">{{ attachment.name }}</a>
       <paper-icon-button icon="icons:clear" (click)="removeAttachment(attachment)"></paper-icon-button>
