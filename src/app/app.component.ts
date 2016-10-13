@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     this.user = this.backend.getCurrentUser();
     this.projects = this.backend.getProjects();
     this.project = this.projects[0];
-    this.selectedTickets = [ this.backend.getTickets()[1] ];
+    // this.selectedTickets = [ this.backend.getTickets()[1] ];
   }
 
   onSelectedTicketsChanged($event) {

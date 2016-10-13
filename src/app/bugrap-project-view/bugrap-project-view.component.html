@@ -13,7 +13,7 @@
 </div>
 
 <div class="version-row">
-  <vaadin-combo-box label="Reports for" [(value)]="version" [items]="versions"></vaadin-combo-box>
+  <vaadin-combo-box label="Reports for" [(value)]="version" [items]="versions" (change)="onVersionChanged($event)"></vaadin-combo-box>
   <div class="counts">
     <span class="counts__first">5</span>
     <span class="counts__second">15</span>
@@ -54,11 +54,12 @@
 <vaadin-grid #grid [items]="tickets" selection-mode="multi">
   <table>
     <colgroup>
+      <col name="version" sortable hidable />
       <col name="priority" sortable />
       <col name="type" sortable />
-      <col name="summary" sortable resizable/>
-      <col name="assigned_to" sortable resizable/>
-      <col name="last_modified" sortable resizable/>
+      <col name="summary" sortable resizable />
+      <col name="assigned_to" sortable resizable />
+      <col name="last_modified" sortable resizable />
       <col name="reported" sortable resizable />
     </colgroup>
   </table>

@@ -39,7 +39,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit {
   }
 
   gridReady(gridElem: any) {
-    gridElem.columns[1].renderer = (cell: any) => {
+    gridElem.columns[2].renderer = (cell: any) => {
       cell.element.innerHTML = BugrapTicketType[cell.data];
     };
 
@@ -49,11 +49,14 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit {
       cell.element.innerHTML = date.isValid() ? date.from(now) : '';
     };
 
-    gridElem.columns[4].renderer = dateRenderer;
     gridElem.columns[5].renderer = dateRenderer;
+    gridElem.columns[6].renderer = dateRenderer;
 
     gridElem.addEventListener('selected-items-changed', () => this.onSelectionChange(gridElem));
-    gridElem.selection.select(1);
+  }
+
+  onVersionChanged($event: any) {
+    this.grid.nativeElement.columns[0].hidden = ($event.target.value != 'All versions');
   }
 
   onSelectionChange(grid: any) {
