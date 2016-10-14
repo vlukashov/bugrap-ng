@@ -33,6 +33,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
   version: string;
   assignedToFilter: string = this.ASSIGNED_TO_ALL;
   statusFilter: string = this.STATUS_ALL;
+  searchFilter: string = '';
   customStatusFilter: BugrapTicketStatus[] = [];
   tickets: BugrapTicket[] = [];
   selectedTickets: BugrapTicket[] = [];
@@ -79,12 +80,21 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
         let lastSelectedVersion = this.lastSelectedVersions[this.project];
         this.lastSelectedVersions[change.previousValue] = this.version;
         this.version = lastSelectedVersion ? lastSelectedVersion : this.versions[0];
+        this.searchFilter = '';
 
         this.onFiltersChanged();
       } else {
         this.version = this.versions[0];
       }
     }
+  }
+
+  // Handles updates to the current search filter
+  // - updates the filter value from the input control
+  // - triggers the grid update
+  onSearchFilterChanged(value: string) {
+    this.searchFilter = value;
+    this.onFiltersChanged();
   }
 
   // Handles updates to the current version:
@@ -129,7 +139,13 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
       let statusMatch = this.statusFilter == this.STATUS_ALL ||
         (this.statusFilter == this.STATUS_OPEN && ticket.status == BugrapTicketStatus.Open) ||
         (this.statusFilter == this.STATUS_CUSTOM && this.customStatusFilter.indexOf(ticket.status) > -1);
-      return projectMatch && versionMatch && assignedToMatch && statusMatch;
+
+      let searchFilterRegExp = new RegExp(this.searchFilter, 'gi');
+      let searchMatch = this.searchFilter == '' ||
+        searchFilterRegExp.test(ticket.summary) ||
+        searchFilterRegExp.test(ticket.description) ||
+        searchFilterRegExp.test(ticket.assigned_to);
+      return projectMatch && versionMatch && assignedToMatch && statusMatch && searchMatch;
     });
 
     // Then extract a slice of the result set and return only the requested number of items.
