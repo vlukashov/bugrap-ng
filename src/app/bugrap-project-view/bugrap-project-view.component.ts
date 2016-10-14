@@ -34,7 +34,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
   assignedToFilter: string = this.ASSIGNED_TO_ALL;
   statusFilter: string = this.STATUS_ALL;
   customStatusFilter: BugrapTicketStatus[] = [];
-  tickets: BugrapTicket[];
+  tickets: BugrapTicket[] = [];
   selectedTickets: BugrapTicket[] = [];
 
   constructor(private backend: BugrapBackendService) {}
@@ -45,7 +45,6 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
   }
 
   ngOnInit() {
-    this.tickets = this.backend.getTickets();
   }
 
   ngAfterViewInit() {
@@ -112,6 +111,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
     // A call to .refreshItem() triggers a call to the .getGridItems() callback.
     // The .getGridItem() applies the current filters and returns filtered data.
     this.execOnGrid(grid => grid.refreshItems());
+    this.execOnGrid(grid => grid.selection.clear());
   }
 
   // the callback for <vaadin-grid> to fetch contents dynamically
@@ -121,7 +121,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
     // 2. do the slicing together with filtering to save even more on CPU and traffic
 
     // Find all tickets that match the current filters for project, version, assigned_to and status
-    let filtered = this.tickets.filter(ticket => {
+    this.tickets = this.backend.getTickets().filter(ticket => {
       let projectMatch = ticket.project == this.project;
       let versionMatch = this.version == this.ALL_VERSIONS || ticket.version == this.version;
       let assignedToMatch = this.assignedToFilter == this.ASSIGNED_TO_ALL ||
@@ -133,8 +133,8 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
     });
 
     // Then extract a slice of the result set and return only the requested number of items.
-    let slice = filtered.slice(params.index, params.index + params.count);
-    callback(slice, filtered.length);
+    let slice = this.tickets.slice(params.index, params.index + params.count);
+    callback(slice, this.tickets.length);
   }
 
   // Handles changes in the grid tickets selection
@@ -149,8 +149,6 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
 
   refreshTickets() {
     let selected = this.grid.nativeElement.selection.selected().slice(0);
-    this.tickets = this.backend.getTickets();
-
     this.execOnGrid(grid => grid.refreshItems());
     this.execOnGrid(grid => {
       selected.forEach(selectedItemIndex => grid.selection.select(selectedItemIndex));
