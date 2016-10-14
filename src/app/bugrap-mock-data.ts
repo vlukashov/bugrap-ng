@@ -19,7 +19,10 @@ export function getProjectsNames(): string[] {
   ];
 }
 
-export function getProjectVersions(): string[] {
+export function getProjectVersions(project: string): string[] {
+  if (project == 'The Phoenix Project') {
+    return [ 'alpha', 'beta' ];
+  }
   return [ '1.2.3-pre12', '1.3' ];
 }
 

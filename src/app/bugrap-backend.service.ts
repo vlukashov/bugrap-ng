@@ -24,8 +24,8 @@ export class BugrapBackendService {
     return MockData.getProjectsNames();
   }
 
-  getVersions(): string[] {
-    return MockData.getProjectVersions();
+  getVersions(project): string[] {
+    return MockData.getProjectVersions(project);
   }
 
   getUsers(): string[] {

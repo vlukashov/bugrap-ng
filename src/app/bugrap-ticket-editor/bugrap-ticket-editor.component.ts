@@ -33,7 +33,7 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
   constructor(private backend: BugrapBackendService) {}
 
   ngOnInit() {
-    this.VERSION_VALUES = this.backend.getVersions();
+    this.VERSION_VALUES = this.backend.getVersions(this.tickets[0].project);
     this.ASSIGNED_TO_VALUES = this.backend.getUsers();
 
     /*

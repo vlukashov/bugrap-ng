@@ -1,4 +1,4 @@
-import {Component, ViewChild, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, OnChanges, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import * as moment from 'moment';
 
 import {BugrapTicketStatus, BugrapTicket, BugrapTicketType} from "../bugrap-ticket";
@@ -10,7 +10,7 @@ import {BugrapBackendService} from "../bugrap-backend.service";
   templateUrl: './bugrap-project-view.component.html',
   styleUrls: [ './bugrap-project-view.component.css' ]
 })
-export class BugrapProjectViewComponent implements OnInit, AfterViewInit {
+export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Input() project: string;
   @Output('selected-tickets-changed') selectedTicketsChanged: EventEmitter<any> = new EventEmitter();
@@ -18,6 +18,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit {
 
   STATUS_CHOICES = BugrapTicketStatus.getValueLabelPairs();
 
+  lastSelectedVersions: Map<string, string> = new Map();
   versions: string[];
   version: string;
   tickets: BugrapTicket[];
@@ -26,9 +27,6 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit {
   constructor(private backend: BugrapBackendService) {}
 
   ngOnInit() {
-    this.versions = this.backend.getVersions();
-    this.versions.unshift('All versions');
-    this.version = this.versions[0];
     this.tickets = this.backend.getTickets();
   }
 
@@ -36,6 +34,25 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit {
     this.grid.nativeElement.then(() => {
       this.gridReady(this.grid.nativeElement);
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['project']) {
+      let change = changes['project'];
+
+      this.versions = this.backend.getVersions(this.project);
+      this.versions.unshift('All versions');
+
+      if (!changes['project'].isFirstChange()) {
+        let lastSelectedVersion = this.lastSelectedVersions[this.project];
+        this.lastSelectedVersions[change.previousValue] = this.version;
+        this.version = lastSelectedVersion ? lastSelectedVersion : this.versions[0];
+
+        this.grid.nativeElement.then(() => this.grid.nativeElement.refreshItems());
+      } else {
+        this.version = this.versions[0];
+      }
+    }
   }
 
   gridReady(gridElem: any) {
@@ -56,7 +73,8 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit {
   }
 
   onVersionChanged($event: any) {
-    this.grid.nativeElement.columns[0].hidden = ($event.target.value != 'All versions');
+    let hidden = $event.target.value != 'All versions';
+    this.grid.nativeElement.then(() => { this.grid.nativeElement.columns[0].hidden = hidden; });
   }
 
   onSelectionChange(grid: any) {
