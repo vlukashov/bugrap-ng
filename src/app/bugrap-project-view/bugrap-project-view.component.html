@@ -25,9 +25,9 @@
   <div class="button-group">
     <label class="button-group__label">Assignees</label>
     <paper-material elevation="1">
-      <paper-tabs selected="1">
-        <paper-tab>Only me</paper-tab>
-        <paper-tab>Everyone</paper-tab>
+      <paper-tabs [(selected)]="assignedToFilter" attr-for-selected="value" (iron-select)="onFiltersChanged()">
+        <paper-tab [value]="ASSIGNED_TO_ME">Only me</paper-tab>
+        <paper-tab [value]="ASSIGNED_TO_ALL">Everyone</paper-tab>
       </paper-tabs>
     </paper-material>
   </div>
@@ -35,16 +35,16 @@
   <div class="button-group status">
     <label class="button-group__label">Status</label>
     <paper-material elevation="1">
-      <paper-tabs selected="1">
-        <paper-tab>Open</paper-tab>
-        <paper-tab>All kinds</paper-tab>
-        <paper-tab class="button-tab">Custom
-          <paper-icon-button class="dropdown-trigger" icon="icons:expand-more" (click)="statusMenu.open()"></paper-icon-button>
+      <paper-tabs [(selected)]="statusFilter" attr-for-selected="value" (iron-select)="onFiltersChanged()">
+        <paper-tab [value]="STATUS_OPEN">Open</paper-tab>
+        <paper-tab [value]="STATUS_ALL">All kinds</paper-tab>
+        <paper-tab [value]="STATUS_CUSTOM" class="button-tab">Custom
+          <paper-icon-button class="dropdown-trigger" icon="icons:expand-more" (click)="statusMenuOverlay.open()"></paper-icon-button>
         </paper-tab>
       </paper-tabs>
     </paper-material>
-    <iron-dropdown #statusMenu no-overlap with-backdrop horizontal-align="right">
-      <paper-menu class="dropdown-content" multi>
+    <iron-dropdown #statusMenuOverlay no-overlap with-backdrop horizontal-align="right" (iron-overlay-closed)="onCustomStatusFilterChanged()">
+      <paper-menu #statusMenu class="dropdown-content" multi>
         <paper-checkbox *ngFor="let status of STATUS_CHOICES" class="status__option" [value]="status.value">{{ status.label }}</paper-checkbox>
       </paper-menu>
     </iron-dropdown>
