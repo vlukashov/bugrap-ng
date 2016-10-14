@@ -16,6 +16,8 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
   @Output('selected-tickets-changed') selectedTicketsChanged: EventEmitter<any> = new EventEmitter();
   @ViewChild('grid') grid: any;
 
+  ALL_VERSIONS = 'All versions';
+
   STATUS_CHOICES = BugrapTicketStatus.getValueLabelPairs();
 
   lastSelectedVersions: Map<string, string> = new Map();
@@ -41,7 +43,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
       let change = changes['project'];
 
       this.versions = this.backend.getVersions(this.project);
-      this.versions.unshift('All versions');
+      this.versions.unshift(this.ALL_VERSIONS);
 
       if (!changes['project'].isFirstChange()) {
         let lastSelectedVersion = this.lastSelectedVersions[this.project];
@@ -56,6 +58,8 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
   }
 
   gridReady(gridElem: any) {
+    gridElem.items = this.getGridItems.bind(this);
+
     gridElem.columns[2].renderer = (cell: any) => {
       cell.element.innerHTML = BugrapTicketType[cell.data];
     };
@@ -72,9 +76,22 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
     gridElem.addEventListener('selected-items-changed', () => this.onSelectionChange(gridElem));
   }
 
+  getGridItems(params, callback) {
+    let filtered = this.tickets.filter(ticket => {
+      let projectMatch = ticket.project == this.project;
+      let versionMatch = this.version == this.ALL_VERSIONS || ticket.version == this.version;
+      return projectMatch && versionMatch;
+    });
+    callback(filtered, filtered.length);
+  }
+
   onVersionChanged($event: any) {
-    let hidden = $event.target.value != 'All versions';
-    this.grid.nativeElement.then(() => { this.grid.nativeElement.columns[0].hidden = hidden; });
+    let hidden = $event.target.value != this.ALL_VERSIONS;
+    let gridElem = this.grid.nativeElement;
+    gridElem.then(() => {
+      gridElem.columns[0].hidden = hidden;
+      gridElem.refreshItems();
+    });
   }
 
   onSelectionChange(grid: any) {
