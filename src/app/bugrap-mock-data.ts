@@ -23,6 +23,9 @@ export function getProjectVersions(project: string): string[] {
   if (project == 'The Phoenix Project') {
     return [ 'alpha', 'beta' ];
   }
+  if (project == 'Yet Another Project (CLOSED, DO NOT USE)') {
+    return [ 'the only version' ];
+  }
   return [ '1.2.3-pre12', '1.3' ];
 }
 

@@ -75,7 +75,9 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
       let change = changes['project'];
 
       this.versions = this.backend.getVersions(this.project);
-      this.versions.unshift(this.ALL_VERSIONS);
+      if (this.versions.length > 1) {
+        this.versions.unshift(this.ALL_VERSIONS);
+      }
 
       if (!changes['project'].isFirstChange()) {
         let lastSelectedVersion = this.lastSelectedVersions[this.project];
