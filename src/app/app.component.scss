@@ -30,7 +30,7 @@ vaadin-split-layout {
 }
 
 bugrap-project-view {
-  flex: initial;
+  flex: 1;
 }
 
 vaadin-split-layout.maximized > bugrap-project-view {
@@ -39,4 +39,5 @@ vaadin-split-layout.maximized > bugrap-project-view {
 
 bugrap-ticket-editor {
   flex: 1;
+  max-height: 35vh;
 }
