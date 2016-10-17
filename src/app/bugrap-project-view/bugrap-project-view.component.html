@@ -36,7 +36,7 @@
   <div class="button-group status">
     <label class="button-group__label">Status</label>
     <paper-material elevation="1">
-      <paper-tabs [(selected)]="statusFilter" attr-for-selected="value" (iron-select)="onFiltersChanged()">
+      <paper-tabs [(selected)]="statusFilter" attr-for-selected="value" (iron-select)="onStatusFilterChanged()">
         <paper-tab [value]="STATUS_OPEN">Open</paper-tab>
         <paper-tab [value]="STATUS_ALL">All kinds</paper-tab>
         <paper-tab [value]="STATUS_CUSTOM" class="button-tab">Custom

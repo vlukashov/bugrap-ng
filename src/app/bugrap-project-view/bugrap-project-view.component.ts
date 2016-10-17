@@ -15,6 +15,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
   @Input() project: string;
   @Output('selected-tickets-changed') selectedTicketsChanged: EventEmitter<any> = new EventEmitter();
   @ViewChild('grid') grid: any;
+  @ViewChild('statusMenuOverlay') statusMenuOverlay: any;
   @ViewChild('statusMenu') statusMenu: any;
 
   ALL_VERSIONS = 'All versions';
@@ -104,6 +105,17 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
     let hidden = $event.target.value != this.ALL_VERSIONS;
     this.execOnGrid(grid => grid.columns[0].hidden = hidden);
     this.onFiltersChanged();
+  }
+
+  // Handles updates to the current status filter
+  // - if the 'custom' status filter is selected but no status values are chosen, open the status selection menu
+  // - otherwise do the same as on any other filters change
+  onStatusFilterChanged() {
+    if (this.statusFilter == this.STATUS_CUSTOM && this.customStatusFilter.length == 0) {
+      this.statusMenuOverlay.nativeElement.open();
+    } else {
+      this.onFiltersChanged();
+    }
   }
 
   // Handles updates to the custom status filter multi-select
