@@ -10,6 +10,12 @@ export class BugrapBackendService {
     return this.tickets;
   }
 
+  getTicket(id: string): BugrapTicket {
+    let index = this.tickets.findIndex(ticket => ticket.id === id);
+    if (index > -1) return this.tickets[index];
+    return null;
+  }
+
   updateTicket(updatedTicket: BugrapTicket): void {
     this.tickets = this.tickets.map(ticket => {
       if (ticket.id == updatedTicket.id) {

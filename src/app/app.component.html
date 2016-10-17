@@ -7,11 +7,11 @@
   </div>
 </paper-material>
 
-<vaadin-split-layout vertical [ngClass]="{'maximized': selectedTickets.length == 0}">
+<vaadin-split-layout vertical [class.maximized]="selectedTickets.length == 0">
   <bugrap-project-view #projectView [project]="project"
                        (selected-tickets-changed)="onSelectedTicketsChanged($event)">
   </bugrap-project-view>
-  <bugrap-ticket-editor #ticketEditor *ngIf="selectedTickets.length > 0"
+  <bugrap-ticket-editor *ngIf="selectedTickets.length > 0"
                         [tickets]="selectedTickets"
                         (tickets-edited)="projectView.refreshTickets()">
   </bugrap-ticket-editor>

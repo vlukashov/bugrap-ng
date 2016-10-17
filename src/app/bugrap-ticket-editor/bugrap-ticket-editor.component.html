@@ -1,7 +1,7 @@
 <paper-dialog #dialog *ngIf="!modal" modal>
   <div class="headline">{{ ticket.project }} > {{ ticket.version }}</div>
   <paper-dialog-scrollable>
-    <bugrap-ticket-editor #modalEditor modal="true" [tickets]="tickets" (tickets-edited)="ticketsEdited.emit($event)"></bugrap-ticket-editor>
+    <bugrap-ticket-editor #modalEditor modal="true" [tickets]="tickets" (tickets-edited)="onModalTicketsEdited($event)"></bugrap-ticket-editor>
   </paper-dialog-scrollable>
   <div class="buttons">
     <vaadin-upload target="http://mockbin.com/request" (upload-success)="onUploadCompleted($event)"></vaadin-upload>

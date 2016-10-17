@@ -1,4 +1,7 @@
-import { Component, Input, Output, ViewChild, DoCheck, OnInit, EventEmitter, ElementRef } from '@angular/core';
+import {
+  Component, Input, Output, ViewChild, DoCheck, OnInit, EventEmitter, ElementRef,
+  SimpleChanges
+} from '@angular/core';
 import {
   BugrapTicket, BugrapTicketType, BugrapTicketStatus, BugrapTicketPriority,
   BugrapTicketAttachment
@@ -15,6 +18,7 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
   @Input() modal: boolean = false;
   @Input() tickets: BugrapTicket[] = [];
   @Output('tickets-edited') ticketsEdited: EventEmitter<any> = new EventEmitter();
+
   @ViewChild('dialog') dialog: ElementRef;
   @ViewChild('modalEditor') modalEditor: any;
 
@@ -55,6 +59,11 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
       this.refreshTickets();
       this.ticketIds = newTicketIds;
     }
+  }
+
+  onModalTicketsEdited($event) {
+    this.ticket = Object.assign(new BugrapTicket(), this.backend.getTicket(this.ticket.id));
+    this.ticketsEdited.emit($event);
   }
 
   refreshTickets() {

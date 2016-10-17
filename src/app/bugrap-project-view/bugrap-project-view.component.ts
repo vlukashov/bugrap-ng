@@ -1,8 +1,8 @@
 import { Component, ViewChild, OnInit, AfterViewInit, OnChanges, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import * as moment from 'moment';
 
-import {BugrapTicketStatus, BugrapTicket, BugrapTicketType} from "../bugrap-ticket";
-import {BugrapBackendService} from "../bugrap-backend.service";
+import { BugrapTicket, BugrapTicketStatus, BugrapTicketType } from "../bugrap-ticket";
+import { BugrapBackendService } from "../bugrap-backend.service";
 
 
 @Component({
