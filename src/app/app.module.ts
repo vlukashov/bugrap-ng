@@ -6,6 +6,7 @@ import { PolymerElement } from '@vaadin/angular2-polymer';
 import { MomentModule } from 'angular2-moment';
 
 import { AppComponent } from './app.component';
+import { BugrapTrigressBarComponent } from './bugrap-trigress-bar/bugrap-trigress-bar.component';
 import { BugrapProjectViewComponent } from './bugrap-project-view/bugrap-project-view.component';
 import { BugrapTicketEditorComponent } from './bugrap-ticket-editor/bugrap-ticket-editor.component';
 import { BugrapBackendService } from './bugrap-backend.service';
@@ -14,8 +15,10 @@ import { BugrapBackendService } from './bugrap-backend.service';
 @NgModule({
   declarations: [
     AppComponent,
+    BugrapTrigressBarComponent,
     BugrapProjectViewComponent,
     BugrapTicketEditorComponent,
+
     PolymerElement('iron-icon'),
     PolymerElement('iron-dropdown'),
 

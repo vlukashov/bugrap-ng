@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@mixin segment {
+  flex: 1;
+  min-width: 30px;
+}
+
+.first {
+  @include segment();
+  color: white;
+  background: #37474F;
+  padding-left: 14px;
+  padding-right: 8px;
+  border-radius: 20px 0 0 20px;
+}
+
+.second {
+  @include segment();
+  color: white;
+  background: #80cbc4;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.third {
+  @include segment();
+  background: #c6e6e3;
+  padding-left: 8px;
+  padding-right: 14px;
+  border-radius: 0 20px 20px 0;
+}

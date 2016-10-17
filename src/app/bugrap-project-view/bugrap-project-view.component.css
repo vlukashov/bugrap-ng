@@ -38,6 +38,12 @@
   align-items: flex-end;
 }
 
+.version-row__counts {
+  flex: 1;
+  margin-left: 8px;
+  padding-bottom: 8px;
+}
+
 paper-button {
   flex-shrink: 0;
 }
@@ -45,46 +51,6 @@ paper-button {
 paper-button:hover {
   background-color: var(--paper-grey-300);
 }
-
-/**
- * TODO: move into a new 'bugrap-counts-gauge' component
- * TODO: add parameters 'first', 'second' and 'third' (or--more generically--via an 'elements' array)
- */
-.counts {
-  display: flex;
-  flex: 1;
-  margin-left: 8px;
-  font-size: 16px;
-  line-height: 24px;
-  padding-bottom: 8px;
-}
-
-.counts__first {
-  flex: 5;
-  color: white;
-  background: #37474F;
-  padding-left: 14px;
-  padding-right: 8px;
-  border-radius: 20px 0 0 20px;
-}
-
-.counts__second {
-  flex: 15;
-  color: white;
-  background: #80cbc4;
-  padding-left: 8px;
-  padding-right: 8px;
-}
-
-.counts__third {
-  flex: 180;
-  background: #c6e6e3;
-  padding-left: 8px;
-  padding-right: 14px;
-  border-radius: 0 20px 20px 0;
-}
-/* end of 'bugrap-counts-gauge' */
-
 
 .filters-row {
   display: flex;

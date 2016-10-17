@@ -15,11 +15,9 @@
 
 <div class="version-row">
   <vaadin-combo-box label="Reports for" [(value)]="version" [items]="versions" (change)="onVersionChanged($event)"></vaadin-combo-box>
-  <div class="counts">
-    <span class="counts__first">5</span>
-    <span class="counts__second">15</span>
-    <span class="counts__third">180</span>
-  </div>
+  <bugrap-trigress-bar class="version-row__counts" [first]="ticketCounts.closed"
+                       [second]="ticketCounts.assigned" [third]="ticketCounts.unassigned">
+  </bugrap-trigress-bar>
 </div>
 
 <div class="filters-row">

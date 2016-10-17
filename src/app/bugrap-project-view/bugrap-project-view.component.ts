@@ -39,6 +39,32 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
   tickets: BugrapTicket[] = [];
   selectedTickets: BugrapTicket[] = [];
 
+  get ticketCounts(): { closed: number, assigned: number, unassigned: number } {
+    let result: { closed: number, assigned: number, unassigned: number } = {
+      closed: 0,
+      assigned: 0,
+      unassigned: 0
+    };
+
+    // NOTE: here it might make sense to offload the counting logic off to the backend for higher efficiency
+    this.backend.getTickets().forEach(ticket => {
+      if (ticket.project != this.project || (this.version != this.ALL_VERSIONS && ticket.version != this.version)) {
+        // return counts only for the tickets in the selected version of the current project
+        return;
+      }
+
+      if (ticket.status != BugrapTicketStatus.Open) {
+        result.closed += 1;
+      } else if (ticket.assigned_to) {
+        result.assigned += 1;
+      } else {
+        result.unassigned += 1;
+      }
+    });
+
+    return result;
+  }
+
   constructor(private backend: BugrapBackendService) {}
 
   // execute some callback async when the grid control is ready
