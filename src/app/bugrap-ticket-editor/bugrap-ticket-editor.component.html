@@ -11,7 +11,7 @@
   </div>
 </paper-dialog>
 
-<div [ngClass]="{'modal': modal}">
+<div [class.modal]="modal">
   <paper-toolbar>
     <paper-icon-button *ngIf="!batchMode && !modal" icon="icons:open-in-new" (click)="dialog.nativeElement.open()"></paper-icon-button>
     <span *ngIf="!batchMode" class="title">{{ ticket?.summary }}</span>

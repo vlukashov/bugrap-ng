@@ -188,6 +188,23 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
       return projectMatch && versionMatch && assignedToMatch && statusMatch && searchMatch;
     });
 
+    // Then apply the sort order (possibly with secondary columns)
+    let grid = this.grid.nativeElement;
+    let sortOrder: Array<{ column: number, direction: string; }> = grid.sortOrder || [];
+    if (sortOrder.length > 0) {
+      this.tickets.sort((a: BugrapTicket, b: BugrapTicket) => {
+        for (let i = 0; i < sortOrder.length; i += 1) {
+          let sort = sortOrder[i];
+          let lesser = sort.direction == 'asc' ? -1 : 1;
+          let property = grid.columns[sort.column].name;
+
+          if (a[property] < b[property]) return lesser;
+          if (a[property] > b[property]) return -lesser;
+        }
+        return 0;
+      });
+    }
+
     // Then extract a slice of the result set and return only the requested number of items.
     let slice = this.tickets.slice(params.index, params.index + params.count);
     callback(slice, this.tickets.length);
