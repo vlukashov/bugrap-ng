@@ -78,6 +78,14 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
   ngAfterViewInit() {
     // initialize the grid control
     this.execOnGrid((grid) => {
+      grid.columns[1].renderer = (cell: any) => {
+        cell.element.innerHTML = '';
+
+        let priorityElement = document.createElement('bugrap-priority');
+        priorityElement.setAttribute('value', cell.data);
+        cell.element.appendChild(priorityElement);
+      };
+
       grid.columns[2].renderer = (cell: any) => {
         cell.element.innerHTML = BugrapTicketType[cell.data];
       };

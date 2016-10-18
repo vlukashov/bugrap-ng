@@ -1,0 +1,74 @@
+<link rel="import" href="./bower_components/polymer/polymer.html">
+
+<dom-module id="bugrap-priority">
+  <template>
+    <div id="bar">
+      <span class="visuallyhidden">[[value]]</span>
+    </div>
+  </template>
+  <style>
+    :host {
+      --bugrap-priority-segment-width: 0.72em;
+    }
+
+    #bar {
+      height: 1.2em;
+      width: calc((1 - 0.2) * var(--bugrap-priority-segment-width));
+      background-size: var(--bugrap-priority-segment-width);
+      background-image: linear-gradient(to right,
+                                        var(--paper-teal-100) 0%, var(--paper-teal-100) 90%,
+                                        rgba(255,255,255,0) 90%, rgba(255,255,255,0) 100%);
+      background-origin: border-box;
+      box-sizing: border-box;
+    }
+
+    .visuallyhidden {
+      position: absolute;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      height: 1px; width: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+    }
+  </style>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'bugrap-priority',
+    properties: {
+      value: {
+        type: Number,
+        value: 1,
+        observer: '_valueChanged'
+      }
+    },
+
+    attached: function() {
+      this._resize();
+    },
+
+    _valueChanged: function(newValue, oldValue) {
+      this.value = newValue;
+      this._resize();
+    },
+
+    _resize: function() {
+      // parse the CSS property to see that length units are used
+      // expect matches to be an array like [ '0.72em', '0.72', 'em' ]
+      let re = /^(.*[^a-z%])([a-z%]+)$/i;
+      let matches = re.exec(this.getComputedStyleValue('--bugrap-priority-segment-width'));
+      if (!matches || matches.length != 3) {
+        return;
+      }
+
+      let margin = 0.2;
+      let segmentWidth = parseFloat(matches[1]);
+      let units = matches[2];
+
+      let size = (this.value - margin) * segmentWidth;
+      this.$.bar.style.width = `${size}${units}`;
+    }
+  });
+</script>
