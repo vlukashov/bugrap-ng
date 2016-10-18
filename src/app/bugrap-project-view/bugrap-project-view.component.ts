@@ -14,6 +14,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
 
   @Input() project: string;
   @Output('selected-tickets-changed') selectedTicketsChanged: EventEmitter<any> = new EventEmitter();
+  @Output('ticket-opened') ticketOpened: EventEmitter<any> = new EventEmitter();
   @ViewChild('grid') grid: any;
   @ViewChild('statusMenuOverlay') statusMenuOverlay: any;
   @ViewChild('statusMenu') statusMenu: any;
@@ -98,6 +99,20 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
 
       grid.columns[5].renderer = dateRenderer;
       grid.columns[6].renderer = dateRenderer;
+
+      let ticketOpened = this.ticketOpened;
+      grid.rowClassGenerator = function(row) {
+        if (!row.element.classList.contains('bugrap-double-click')) {
+          let data = row.data;
+          let index = row.index;
+          row.element.addEventListener('dblclick', function() {
+            grid.selection.clear();
+            grid.selection.select(index);
+            ticketOpened.emit(data);
+          });
+        }
+        return 'bugrap-double-click';
+      };
 
       grid.addEventListener('selected-items-changed', () => this.onSelectionChange(grid));
       grid.items = this.getGridItems.bind(this);

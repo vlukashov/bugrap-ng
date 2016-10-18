@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 
 import { BugrapTicket } from "./bugrap-ticket";
 import { BugrapBackendService } from './bugrap-backend.service';
+import { BugrapTicketEditorComponent } from "./bugrap-ticket-editor/bugrap-ticket-editor.component";
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,7 @@ import { BugrapBackendService } from './bugrap-backend.service';
 })
 export class AppComponent implements OnInit {
 
+  @ViewChild(BugrapTicketEditorComponent) ticketEditor: BugrapTicketEditorComponent;
   user: any;
   projects: string[];
   project: string;

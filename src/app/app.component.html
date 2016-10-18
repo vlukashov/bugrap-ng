@@ -9,10 +9,10 @@
 
 <vaadin-split-layout vertical [class.maximized]="selectedTickets.length == 0">
   <bugrap-project-view #projectView [project]="project"
-                       (selected-tickets-changed)="onSelectedTicketsChanged($event)">
+                       (selected-tickets-changed)="onSelectedTicketsChanged($event)"
+                       (ticket-opened)="ticketEditor.openModal()">
   </bugrap-project-view>
-  <bugrap-ticket-editor *ngIf="selectedTickets.length > 0"
-                        [tickets]="selectedTickets"
+  <bugrap-ticket-editor #ticketEditor [tickets]="selectedTickets"
                         (tickets-edited)="projectView.refreshTickets()">
   </bugrap-ticket-editor>
 </vaadin-split-layout>

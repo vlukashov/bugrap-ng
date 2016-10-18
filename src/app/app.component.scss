@@ -33,11 +33,15 @@ bugrap-project-view {
   flex: 1;
 }
 
+bugrap-ticket-editor {
+  flex: 1;
+  max-height: 35vh;
+}
+
 vaadin-split-layout.maximized > bugrap-project-view {
   height: 100%;
 }
 
-bugrap-ticket-editor {
-  flex: 1;
-  max-height: 35vh;
+vaadin-split-layout.maximized > bugrap-ticket-editor {
+  display: none;
 }

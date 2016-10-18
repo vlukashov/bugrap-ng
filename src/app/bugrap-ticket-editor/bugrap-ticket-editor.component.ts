@@ -37,15 +37,12 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
   constructor(private backend: BugrapBackendService) {}
 
   ngOnInit() {
+    if (this.tickets.length == 0) {
+      return;
+    }
+
     this.VERSION_VALUES = this.backend.getVersions(this.tickets[0].project);
     this.ASSIGNED_TO_VALUES = this.backend.getUsers();
-
-    /*
-    if (!this.modal)
-      setTimeout(() => {
-        this.dialog.nativeElement.open();
-      });
-    */
   }
 
   ngDoCheck() {
@@ -59,6 +56,10 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
       this.refreshTickets();
       this.ticketIds = newTicketIds;
     }
+  }
+
+  openModal() {
+    this.dialog.nativeElement.open();
   }
 
   onModalTicketsEdited($event) {
