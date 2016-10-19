@@ -13,7 +13,7 @@
 
 <div [class.modal]="modal">
   <paper-toolbar>
-    <paper-icon-button *ngIf="!batchMode && !modal" icon="icons:open-in-new" (click)="dialog.nativeElement.open()"></paper-icon-button>
+    <paper-icon-button *ngIf="!batchMode && !modal" icon="icons:open-in-new" (click)="openModal()"></paper-icon-button>
     <span *ngIf="!batchMode" class="title">{{ ticket?.summary }}</span>
     <div *ngIf="batchMode" class="title">
       {{ tickets.length }} reports are selected
@@ -21,14 +21,14 @@
     </div>
   </paper-toolbar>
 
-  <form #editorForm="ngForm" class="row" *ngIf="ticket != null">
+  <form #editorForm="ngForm" class="row">
     <vaadin-combo-box label="Priority" name="priority" ngDefaultControl [(ngModel)]="ticket.priority" [items]="PRIORITY_CHOICES"></vaadin-combo-box>
     <vaadin-combo-box label="Type" name="type" ngDefaultControl [(ngModel)]="ticket.type" [items]="TYPE_CHOICES"></vaadin-combo-box>
     <vaadin-combo-box label="Status" name="status" ngDefaultControl [(ngModel)]="ticket.status" [items]="STATUS_CHOICES"></vaadin-combo-box>
     <vaadin-combo-box label="Assigned to" name="assigned_to" ngDefaultControl [(ngModel)]="ticket.assigned_to" [items]="ASSIGNED_TO_VALUES"></vaadin-combo-box>
     <vaadin-combo-box label="Version" name="version" ngDefaultControl [(ngModel)]="ticket.version" [items]="VERSION_VALUES"></vaadin-combo-box>
-    <paper-button raised (click)="update()" [disabled]="editorForm.form.untouched">Update</paper-button>
-    <paper-button raised (click)="revert()" [disabled]="editorForm.form.untouched">Revert</paper-button>
+    <paper-button raised (click)="update()" [disabled]="editorForm.form.pristine">Update</paper-button>
+    <paper-button raised (click)="revert()" [disabled]="editorForm.form.pristine">Revert</paper-button>
   </form>
 
   <section *ngIf="!batchMode" class="ticket">

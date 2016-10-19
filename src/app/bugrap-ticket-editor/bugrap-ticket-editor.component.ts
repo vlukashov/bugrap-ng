@@ -1,7 +1,5 @@
-import {
-  Component, Input, Output, ViewChild, DoCheck, OnInit, EventEmitter, ElementRef,
-  SimpleChanges
-} from '@angular/core';
+import { Component, Input, Output, ViewChild, DoCheck, EventEmitter, ElementRef, AfterViewInit } from '@angular/core';
+import { NgForm } from "@angular/forms";
 import {
   BugrapTicket, BugrapTicketType, BugrapTicketStatus, BugrapTicketPriority,
   BugrapTicketAttachment
@@ -14,13 +12,14 @@ import { BugrapBackendService } from '../bugrap-backend.service';
   templateUrl: './bugrap-ticket-editor.component.html',
   styleUrls: ['./bugrap-ticket-editor.component.scss']
 })
-export class BugrapTicketEditorComponent implements DoCheck, OnInit {
+export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
   @Input() modal: boolean = false;
   @Input() tickets: BugrapTicket[] = [];
   @Output('tickets-edited') ticketsEdited: EventEmitter<any> = new EventEmitter();
 
   @ViewChild('dialog') dialog: ElementRef;
   @ViewChild('modalEditor') modalEditor: any;
+  @ViewChild('editorForm') editorForm: NgForm;
 
   EDITABLE_PROPERTIES = ['priority', 'type', 'status', 'assigned_to', 'version'];
 
@@ -32,29 +31,38 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
   ASSIGNED_TO_VALUES: string[];
   batchMode: boolean = false;
   ticketIds: string[] = [];
-  ticket: BugrapTicket = null;
+  ticket: BugrapTicket = new BugrapTicket();
 
   constructor(private backend: BugrapBackendService) {}
 
-  ngOnInit() {
-    if (this.tickets.length == 0) {
-      return;
-    }
-
-    this.VERSION_VALUES = this.backend.getVersions(this.tickets[0].project);
-    this.ASSIGNED_TO_VALUES = this.backend.getUsers();
-  }
-
   ngDoCheck() {
-    if (!this.tickets) {
+    if (this.tickets.length == 0) {
       return;
     }
 
     let newTicketIds = this.tickets.map(ticket => ticket.id).sort();
     let hasChanges = !BugrapTicketEditorComponent._arrayEquals(this.ticketIds, newTicketIds);
     if (hasChanges) {
+      this.VERSION_VALUES = this.backend.getVersions(this.tickets[0].project);
+      this.ASSIGNED_TO_VALUES = this.backend.getUsers();
       this.refreshTickets();
       this.ticketIds = newTicketIds;
+    }
+  }
+
+  ngAfterViewInit() {
+    this._resetForm();
+  }
+
+  _resetForm() {
+    if (!this.editorForm) {
+      return;
+    }
+
+    this.editorForm.reset(this.ticket);
+    if (this.editorForm.dirty) {
+      // call it the second time due to this bug in angular2-polymer library https://github.com/vaadin/angular2-polymer/issues/95
+      this.editorForm.reset(this.ticket);
     }
   }
 
@@ -63,13 +71,14 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
   }
 
   onModalTicketsEdited($event) {
-    this.ticket = Object.assign(new BugrapTicket(), this.backend.getTicket(this.ticket.id));
+    this.tickets[0] = this.backend.getTicket(this.ticket.id);
+    this.refreshTickets();
     this.ticketsEdited.emit($event);
   }
 
   refreshTickets() {
     if (!this.tickets) {
-      this.ticket = null;
+      this.ticket = new BugrapTicket();
       this.batchMode = false;
       return;
     }
@@ -87,6 +96,8 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
         }
       }, this);
     }
+
+    this._resetForm();
   }
 
   update() {
@@ -110,6 +121,7 @@ export class BugrapTicketEditorComponent implements DoCheck, OnInit {
         this.backend.updateTicket(ticket);
       }, this);
     }
+    this._resetForm();
     this.ticketsEdited.emit(null);
   }
 
