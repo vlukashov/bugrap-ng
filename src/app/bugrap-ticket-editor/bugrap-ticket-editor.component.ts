@@ -2,7 +2,7 @@ import { Component, Input, Output, ViewChild, DoCheck, EventEmitter, ElementRef,
 import { NgForm } from "@angular/forms";
 import {
   BugrapTicket, BugrapTicketType, BugrapTicketStatus, BugrapTicketPriority,
-  BugrapTicketAttachment
+  BugrapTicketAttachment, BugrapTicketComment
 } from '../bugrap-ticket';
 import { BugrapBackendService } from '../bugrap-backend.service';
 
@@ -32,6 +32,7 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
   batchMode: boolean = false;
   ticketIds: string[] = [];
   ticket: BugrapTicket = new BugrapTicket();
+  comment: string = '';
 
   constructor(private backend: BugrapBackendService) {}
 
@@ -59,6 +60,7 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
       return;
     }
 
+    this.comment = '';
     this.editorForm.reset(this.ticket);
     if (this.editorForm.dirty) {
       // call it the second time due to this bug in angular2-polymer library https://github.com/vaadin/angular2-polymer/issues/95
@@ -74,6 +76,14 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
     this.tickets[0] = this.backend.getTicket(this.ticket.id);
     this.refreshTickets();
     this.ticketsEdited.emit($event);
+  }
+
+  onModalClosed($event) {
+    if ($event.detail.confirmed) {
+      this.modalEditor.update();
+    } else {
+      this.modalEditor.revert();
+    }
   }
 
   refreshTickets() {
@@ -104,6 +114,13 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
     let timestamp = new Date();
     if (!this.batchMode) {
       this.ticket.last_modified = timestamp;
+      if (this.comment) {
+        let newComment = new BugrapTicketComment();
+        newComment.description = this.comment;
+        newComment.created = timestamp;
+        newComment.created_by = this.backend.getCurrentUser().name;
+        this.ticket.comments.push(newComment);
+      }
       this.backend.updateTicket(this.ticket);
     } else {
       this.tickets.forEach(ticket => {
@@ -144,11 +161,13 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
     attachment.name = file.name;
     attachment.url = '/';
     this.ticket.attachments.push(attachment);
+    this.tickets[0].attachments = this.ticket.attachments;
     this.backend.updateTicket(this.ticket);
   }
 
   removeAttachment(attachment: BugrapTicketAttachment) {
     this.ticket.attachments = this.ticket.attachments.filter(att => att !== attachment);
+    this.tickets[0].attachments = this.ticket.attachments;
     this.backend.updateTicket(this.ticket);
   }
 

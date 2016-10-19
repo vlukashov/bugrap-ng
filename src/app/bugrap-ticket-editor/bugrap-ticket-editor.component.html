@@ -1,4 +1,4 @@
-<paper-dialog #dialog *ngIf="!modal" modal>
+<paper-dialog #dialog *ngIf="!modal" modal (iron-overlay-closed)="onModalClosed($event)">
   <div class="headline">{{ ticket?.project }} > {{ ticket?.version }}</div>
   <paper-dialog-scrollable>
     <bugrap-ticket-editor #modalEditor modal="true" [tickets]="tickets" (tickets-edited)="onModalTicketsEdited($event)"></bugrap-ticket-editor>
@@ -27,8 +27,8 @@
     <vaadin-combo-box label="Status" name="status" ngDefaultControl [(ngModel)]="ticket.status" [items]="STATUS_CHOICES"></vaadin-combo-box>
     <vaadin-combo-box label="Assigned to" name="assigned_to" ngDefaultControl [(ngModel)]="ticket.assigned_to" [items]="ASSIGNED_TO_VALUES"></vaadin-combo-box>
     <vaadin-combo-box label="Version" name="version" ngDefaultControl [(ngModel)]="ticket.version" [items]="VERSION_VALUES"></vaadin-combo-box>
-    <paper-button raised (click)="update()" [disabled]="editorForm.form.pristine">Update</paper-button>
-    <paper-button raised (click)="revert()" [disabled]="editorForm.form.pristine">Revert</paper-button>
+    <paper-button *ngIf="!modal" raised (click)="update()" [disabled]="editorForm.form.pristine">Update</paper-button>
+    <paper-button *ngIf="!modal" raised (click)="revert()" [disabled]="editorForm.form.pristine">Revert</paper-button>
   </form>
 
   <section *ngIf="!batchMode" class="ticket">
@@ -54,7 +54,8 @@
   </template>
 
   <section *ngIf="modal" class="ticket">
-    <paper-textarea label="Add a new comment" placeholder="Start typing your comments here"></paper-textarea>
+    <paper-textarea label="Add a new comment" placeholder="Start typing your comments here"
+                    ngDefaultControl [(ngModel)]="comment"></paper-textarea>
   </section>
 
   <section *ngIf="modal && ticket?.attachments?.length > 0" class="attachments">
