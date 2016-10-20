@@ -2,7 +2,7 @@
   <div class="header">
     <vaadin-combo-box class="header__combobox" label="Select a project" [(value)]="project" [items]="projects"></vaadin-combo-box>
     <div class="extender"></div>
-    <paper-button><iron-icon icon="social:person"></iron-icon>{{ user.name }}</paper-button>
+    <paper-button><iron-icon icon="social:person"></iron-icon>{{ user?.name }}</paper-button>
     <paper-button><iron-icon icon="icons:exit-to-app"></iron-icon>Logout</paper-button>
   </div>
 </paper-material>

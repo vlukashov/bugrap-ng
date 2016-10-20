@@ -58,13 +58,34 @@ export namespace BugrapTicketPriority {
   }
 }
 
+export class BugrapUser {
+  constructor(
+    public id?: string,
+    public name?: string) {}
+}
+
+export class BugrapProject {
+  constructor(
+    public id?: string,
+    public name?: string) {}
+}
+
+export class BugrapVersion {
+  constructor(
+    public id?: string,
+    public name?: string,
+    public project?: string) {}
+}
+
 export class BugrapTicketComment {
+  id: string;
   created: Date;
   created_by: string;
   description: string;
 }
 
 export class BugrapTicketAttachment {
+  id: string;
   name: string;
   url: string;
 }

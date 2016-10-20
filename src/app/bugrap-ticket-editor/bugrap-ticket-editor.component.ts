@@ -1,8 +1,11 @@
-import { Component, Input, Output, ViewChild, DoCheck, EventEmitter, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component, Input, Output, ViewChild, DoCheck, EventEmitter, ElementRef, AfterViewInit,
+  OnInit
+} from '@angular/core';
 import { NgForm } from "@angular/forms";
 import {
   BugrapTicket, BugrapTicketType, BugrapTicketStatus, BugrapTicketPriority,
-  BugrapTicketAttachment, BugrapTicketComment
+  BugrapTicketAttachment, BugrapTicketComment, BugrapUser
 } from '../bugrap-ticket';
 import { BugrapBackendService } from '../bugrap-backend.service';
 
@@ -12,7 +15,7 @@ import { BugrapBackendService } from '../bugrap-backend.service';
   templateUrl: './bugrap-ticket-editor.component.html',
   styleUrls: ['./bugrap-ticket-editor.component.scss']
 })
-export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
+export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit, OnInit {
   @Input() modal: boolean = false;
   @Input() tickets: BugrapTicket[] = [];
   @Output('tickets-edited') ticketsEdited: EventEmitter<any> = new EventEmitter();
@@ -27,6 +30,7 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
   STATUS_CHOICES = BugrapTicketStatus.getValueLabelPairs();
   PRIORITY_CHOICES = BugrapTicketPriority.getValueLabelPairs();
 
+  user: BugrapUser;
   VERSION_VALUES: string[];
   ASSIGNED_TO_VALUES: string[];
   batchMode: boolean = false;
@@ -36,6 +40,11 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
 
   constructor(private backend: BugrapBackendService) {}
 
+  ngOnInit() {
+    this.backend.getUsers().then(users => this.ASSIGNED_TO_VALUES = users);
+    this.backend.getCurrentUser().then(user => this.user = user);
+  }
+
   ngDoCheck() {
     if (this.tickets.length == 0) {
       return;
@@ -44,8 +53,9 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
     let newTicketIds = this.tickets.map(ticket => ticket.id).sort();
     let hasChanges = !BugrapTicketEditorComponent._arrayEquals(this.ticketIds, newTicketIds);
     if (hasChanges) {
-      this.VERSION_VALUES = this.backend.getVersions(this.tickets[0].project);
-      this.ASSIGNED_TO_VALUES = this.backend.getUsers();
+      this.backend.getVersions(this.tickets[0].project).then(versions => {
+        this.VERSION_VALUES = versions;
+      });
       this.refreshTickets();
       this.ticketIds = newTicketIds;
     }
@@ -73,8 +83,10 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
   }
 
   onModalTicketsEdited($event) {
-    this.tickets[0] = this.backend.getTicket(this.ticket.id);
-    this.refreshTickets();
+    this.backend.getTicket(this.ticket.id).then(ticket => {
+      this.tickets[0] = ticket;
+      this.refreshTickets();
+    });
     this.ticketsEdited.emit($event);
   }
 
@@ -95,7 +107,9 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
 
     this.batchMode = this.tickets.length > 1;
     if (!this.batchMode) {
-      this.ticket = Object.assign(new BugrapTicket(), this.tickets[0]);
+      this.backend.getTicket(this.tickets[0].id).then(ticket => {
+        this.ticket = Object.assign(new BugrapTicket(), ticket);
+      });
     } else {
       this.ticket = new BugrapTicket();
       this.EDITABLE_PROPERTIES.forEach(property => {
@@ -118,7 +132,7 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit {
         let newComment = new BugrapTicketComment();
         newComment.description = this.comment;
         newComment.created = timestamp;
-        newComment.created_by = this.backend.getCurrentUser().name;
+        newComment.created_by = this.user.name;
         this.ticket.comments.push(newComment);
       }
       this.backend.updateTicket(this.ticket);

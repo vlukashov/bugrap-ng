@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 
-import { BugrapTicket } from "./bugrap-ticket";
+import { BugrapTicket, BugrapUser } from "./bugrap-ticket";
 import { BugrapBackendService } from './bugrap-backend.service';
 import { BugrapTicketEditorComponent } from "./bugrap-ticket-editor/bugrap-ticket-editor.component";
 
@@ -12,7 +12,7 @@ import { BugrapTicketEditorComponent } from "./bugrap-ticket-editor/bugrap-ticke
 export class AppComponent implements OnInit {
 
   @ViewChild(BugrapTicketEditorComponent) ticketEditor: BugrapTicketEditorComponent;
-  user: any;
+  user: BugrapUser;
   projects: string[];
   project: string;
   selectedTickets: BugrapTicket[] = [];
@@ -20,10 +20,11 @@ export class AppComponent implements OnInit {
   constructor(private backend: BugrapBackendService) {}
 
   ngOnInit() {
-    this.user = this.backend.getCurrentUser();
-    this.projects = this.backend.getProjects();
-    this.project = this.projects[0];
-    // this.selectedTickets = [ this.backend.getTickets()[1] ];
+    this.backend.getCurrentUser().then(user => this.user = user);
+    this.backend.getProjects().then(projects => {
+      this.projects = projects;
+      this.project = projects[0];
+    });
   }
 
   onSelectedTicketsChanged($event) {

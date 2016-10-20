@@ -11,6 +11,9 @@ import { BugrapProjectViewComponent } from './bugrap-project-view/bugrap-project
 import { BugrapTicketEditorComponent } from './bugrap-ticket-editor/bugrap-ticket-editor.component';
 import { BugrapBackendService } from './bugrap-backend.service';
 
+import { firebaseConfig } from './firebase.config';
+import { AngularFireModule } from 'angularfire2';
+
 
 @NgModule({
   declarations: [
@@ -45,7 +48,8 @@ import { BugrapBackendService } from './bugrap-backend.service';
     BrowserModule,
     FormsModule,
     HttpModule,
-    MomentModule
+    MomentModule,
+    AngularFireModule.initializeApp(firebaseConfig)
   ],
   providers: [ BugrapBackendService ],
   bootstrap: [ AppComponent ],
