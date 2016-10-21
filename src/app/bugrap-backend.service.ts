@@ -12,7 +12,7 @@ import {
 @Injectable()
 export class BugrapBackendService {
   private usersSubscription: Subscription;
-  private users: Promise<string[]>;
+  private users: Promise<BugrapUser[]>;
 
   private projectsSubscription: Subscription;
   private projects: Promise<string[]>;
@@ -26,9 +26,7 @@ export class BugrapBackendService {
   /* @Inject(FirebaseApp) private fbApp: firebase.app.App */
   constructor(private af: AngularFire) {
     this.users = new Promise((resolve, reject) => {
-      this.usersSubscription = this.getUsersObservable().subscribe((users: BugrapUser[]) => {
-        resolve(users.map(user => user.name));
-      });
+      this.usersSubscription = this.getUsersObservable().subscribe(users => resolve(users));
     });
 
     this.projects = new Promise((resolve, reject) => {
@@ -79,17 +77,17 @@ export class BugrapBackendService {
       return fbTickets.map((fbTicket: any) => {
         let ticket = new BugrapTicket();
         ticket.id = fbTicket.$key;
-        ticket.assigned_to = fbTicket.assigned_to_label;
+        ticket.assigned_to = fbTicket.assigned_to ? new BugrapUser(fbTicket.assigned_to, fbTicket.assigned_to_label) : null;
         ticket.description = fbTicket.description;
-        ticket.last_modified = fbTicket.last_modified;
+        ticket.last_modified = fbTicket.last_modified ? new Date(fbTicket.last_modified) : null;
         ticket.priority = <BugrapTicketPriority>fbTicket.priority;
-        ticket.project = fbTicket.project_label;
-        ticket.reported = fbTicket.reported;
-        ticket.reported_by = fbTicket.reported_by_label;
+        ticket.project = new BugrapProject(fbTicket.project, fbTicket.project_label);
+        ticket.reported = new Date(fbTicket.reported);
+        ticket.reported_by = new BugrapUser(fbTicket.reported_by, fbTicket.reported_by_label);
         ticket.status = BugrapTicketStatus[<string>fbTicket.status];
         ticket.summary = fbTicket.summary;
         ticket.type = BugrapTicketType[<string>fbTicket.type];
-        ticket.version = fbTicket.version_label;
+        ticket.version = new BugrapVersion(fbTicket.version, fbTicket.version_label, fbTicket.project_label);
         return ticket;
       });
     });
@@ -116,8 +114,12 @@ export class BugrapBackendService {
           comment.id = fbComment.$key;
           comment.description = fbComment.message;
           comment.created = fbComment.created;
-          comment.created_by = fbComment.created_by_label;
+          comment.created_by = new BugrapUser(fbComment.created, fbComment.created_by_label);
           return comment;
+        }).sort((a: BugrapTicketComment, b: BugrapTicketComment) => {
+          if (a.created < b.created) return -1;
+          if (a.created > b.created) return 1;
+          return 0;
         }));
       });
     });
@@ -148,30 +150,63 @@ export class BugrapBackendService {
     });
   }
 
-  updateTicket(updatedTicket: BugrapTicket): Promise<BugrapTicket[]> {
-    this.tickets = this.tickets.then((tickets: BugrapTicket[]) => {
-      return tickets.map((ticket: BugrapTicket) => {
-        if (ticket.id == updatedTicket.id) {
-          return <BugrapTicket> Object.assign(new BugrapTicket(), updatedTicket);
-        } else {
-          return ticket;
-        }
+  updateTicket(updatedTicket: BugrapTicket) {
+    this.tickets.then(tickets => {
+      // Update the local cache first (this is quick)
+      let index = tickets.findIndex(ticket => ticket.id == updatedTicket.id);
+      if (index > -1) {
+        tickets[index] = <BugrapTicket>Object.assign(new BugrapTicket(), updatedTicket);
+      }
+    }).then(() => {
+      // After that send the update to the server.
+      // (once the tickets list is update on the server, it sends an update back and the local cache is refreshed)
+      this.af.database.list('/tickets').update(updatedTicket.id, {
+        assigned_to: updatedTicket.assigned_to ? updatedTicket.assigned_to.id : null,
+        assigned_to_label: updatedTicket.assigned_to ? updatedTicket.assigned_to.name : null,
+        description: updatedTicket.description,
+        last_modified: updatedTicket.last_modified ? updatedTicket.last_modified.toJSON() : null,
+        priority: updatedTicket.priority,
+        project: updatedTicket.project ? updatedTicket.project.id : null,
+        project_label: updatedTicket.project ? updatedTicket.project.name : null,
+        reported: updatedTicket.reported ? updatedTicket.reported.toJSON() : null,
+        reported_by: updatedTicket.reported_by ? updatedTicket.reported_by.id : null,
+        reported_by_label: updatedTicket.reported_by ? updatedTicket.reported_by.name : null,
+        status: BugrapTicketStatus[updatedTicket.status],
+        summary: updatedTicket.summary,
+        type: BugrapTicketType[updatedTicket.type],
+        version: updatedTicket.version ? updatedTicket.version.id : null,
+        version_label: updatedTicket.version ? updatedTicket.version.name : null
       });
     });
-    return this.tickets;
+  }
+
+  addComment(comment: BugrapTicketComment) {
+    this.af.database.list('/comments').push({
+      created: comment.created.toJSON(),
+      created_by: comment.created_by.id,
+      created_by_label: comment.created_by.name,
+      message: comment.description,
+      ticket: comment.ticket
+    });
   }
 
   getProjects(): Promise<string[]> {
     return this.projects;
   }
 
-  getVersions(project): Promise<string[]> {
-    return this.versions.then(versions => {
-      return versions.filter(version => version.project == project).map(version => version.name);
+  getVersionNames(project: string): Promise<string[]> {
+    return this.versions.then((versions: BugrapVersion[]) => {
+      return versions.filter((version: BugrapVersion) => version.project == project).map(version => version.name);
     });
   }
 
-  getUsers(): Promise<string[]> {
+  getVersions(project: string): Promise<BugrapVersion[]> {
+    return this.versions.then((versions: BugrapVersion[]) => {
+      return versions.filter((version: BugrapVersion) => version.project == project);
+    });
+  }
+
+  getUsers(): Promise<BugrapUser[]> {
     return this.users;
   }
 

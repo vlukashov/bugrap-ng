@@ -5,7 +5,7 @@ import {
 import { NgForm } from "@angular/forms";
 import {
   BugrapTicket, BugrapTicketType, BugrapTicketStatus, BugrapTicketPriority,
-  BugrapTicketAttachment, BugrapTicketComment, BugrapUser
+  BugrapTicketAttachment, BugrapTicketComment, BugrapUser, BugrapVersion
 } from '../bugrap-ticket';
 import { BugrapBackendService } from '../bugrap-backend.service';
 
@@ -31,8 +31,8 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit, OnIn
   PRIORITY_CHOICES = BugrapTicketPriority.getValueLabelPairs();
 
   user: BugrapUser;
-  VERSION_VALUES: string[];
-  ASSIGNED_TO_VALUES: string[];
+  VERSION_VALUES: BugrapVersion[];
+  ASSIGNED_TO_VALUES: BugrapUser[];
   batchMode: boolean = false;
   ticketIds: string[] = [];
   ticket: BugrapTicket = new BugrapTicket();
@@ -53,7 +53,7 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit, OnIn
     let newTicketIds = this.tickets.map(ticket => ticket.id).sort();
     let hasChanges = !BugrapTicketEditorComponent._arrayEquals(this.ticketIds, newTicketIds);
     if (hasChanges) {
-      this.backend.getVersions(this.tickets[0].project).then(versions => {
+      this.backend.getVersions(this.tickets[0].project.name).then(versions => {
         this.VERSION_VALUES = versions;
       });
       this.refreshTickets();
@@ -66,15 +66,44 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit, OnIn
   }
 
   _resetForm() {
-    if (!this.editorForm) {
+    if (!this.editorForm || !this.ticket) {
       return;
     }
 
+    let formdata = {
+      version: this.ticket.version ? this.ticket.version.id : undefined,
+      priority: this.ticket.priority,
+      type: this.ticket.type,
+      status: this.ticket.status,
+      assigned_to: this.ticket.assigned_to ? this.ticket.assigned_to.id : undefined
+    };
     this.comment = '';
-    this.editorForm.reset(this.ticket);
+    this.editorForm.reset(formdata);
     if (this.editorForm.dirty) {
       // call it the second time due to this bug in angular2-polymer library https://github.com/vaadin/angular2-polymer/issues/95
-      this.editorForm.reset(this.ticket);
+      this.editorForm.reset(formdata);
+    }
+  }
+
+  onAssignedToChanged($event) {
+    if (!this.ASSIGNED_TO_VALUES) {
+      return;
+    }
+
+    let index = this.ASSIGNED_TO_VALUES.findIndex((user: BugrapUser) => user.id == $event);
+    if (index > -1) {
+      this.ticket.assigned_to = this.ASSIGNED_TO_VALUES[index];
+    }
+  }
+
+  onVersionChanged($event) {
+    if (!this.VERSION_VALUES) {
+      return;
+    }
+
+    let index = this.VERSION_VALUES.findIndex((version: BugrapVersion) => version.id == $event);
+    if (index > -1) {
+      this.ticket.version = this.VERSION_VALUES[index];
     }
   }
 
@@ -109,19 +138,26 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit, OnIn
     if (!this.batchMode) {
       this.backend.getTicket(this.tickets[0].id).then(ticket => {
         this.ticket = Object.assign(new BugrapTicket(), ticket);
+        this._resetForm();
       });
     } else {
       this.ticket = new BugrapTicket();
-      this.EDITABLE_PROPERTIES.forEach(property => {
+      ['priority', 'type', 'status'].forEach((property: string) => {
         let firstValue = this.tickets[0][property];
         let differentIndex = this.tickets.slice(1).findIndex(ticket => ticket[property] != firstValue);
-        if (differentIndex == -1) {
-          this.ticket[property] = firstValue;
-        }
+        this.ticket[property] = differentIndex == -1 ? firstValue : null;
       }, this);
-    }
 
-    this._resetForm();
+      let firstVersion = this.tickets[0].version;
+      let differentIndex = this.tickets.slice(1).findIndex(ticket => ticket.version.id != firstVersion.id);
+      this.ticket.version = differentIndex == -1 ? new BugrapVersion(firstVersion.id, firstVersion.name, firstVersion.project) : null;
+
+      let firstAssignee = this.tickets[0].assigned_to;
+      differentIndex = this.tickets.slice(1).findIndex(ticket => ticket.assigned_to.id != firstAssignee.id);
+      this.ticket.assigned_to = differentIndex == -1 ? new BugrapUser(firstAssignee.id, firstAssignee.name) : null;
+
+      this._resetForm();
+    }
   }
 
   update() {
@@ -132,20 +168,33 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit, OnIn
         let newComment = new BugrapTicketComment();
         newComment.description = this.comment;
         newComment.created = timestamp;
-        newComment.created_by = this.user.name;
+        newComment.created_by = this.user;
+        newComment.ticket = this.ticket.id;
+        this.backend.addComment(newComment);
         this.ticket.comments.push(newComment);
       }
       this.backend.updateTicket(this.ticket);
     } else {
       this.tickets.forEach(ticket => {
         let hasChanges = false;
-        this.EDITABLE_PROPERTIES.forEach(property => {
+        ['priority', 'type', 'status'].forEach(property => {
           // do not write back the properties which values were not changed
-          if (typeof this.ticket[property] !== 'undefined' && this.ticket[property] != ticket[property]) {
+          if (this.ticket[property] != null && this.ticket[property] != ticket[property]) {
             ticket[property] = this.ticket[property];
             hasChanges = true;
           }
         }, this);
+        if (this.ticket.version != null && this.ticket.version.id != ticket.version.id) {
+          ticket.version.id = this.ticket.version.id;
+          ticket.version.name = this.ticket.version.name;
+          ticket.version.project = this.ticket.version.project;
+          hasChanges = true;
+        }
+        if (this.ticket.assigned_to != null && this.ticket.assigned_to.id != ticket.assigned_to.id) {
+          ticket.assigned_to.id = this.ticket.assigned_to.id;
+          ticket.assigned_to.name = this.ticket.assigned_to.name;
+          hasChanges = true;
+        }
         if (hasChanges) {
           ticket.last_modified = timestamp;
         }

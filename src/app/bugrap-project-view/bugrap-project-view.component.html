@@ -53,13 +53,24 @@
 <vaadin-grid #grid selection-mode="multi" detailed-events='["dblclick"]'>
   <table>
     <colgroup>
-      <col name="version" sortable hidable sort-direction="asc" />
+      <col name="version.name" sortable hidable sort-direction="asc" />
       <col name="priority" sortable sort-direction="desc" />
       <col name="type" sortable />
       <col name="summary" sortable resizable />
-      <col name="assigned_to" sortable resizable />
+      <col name="assigned_to.name" sortable resizable />
       <col name="last_modified" sortable resizable />
       <col name="reported" sortable resizable />
     </colgroup>
+    <thead>
+    <tr>
+      <th>Version</th>
+      <th>Priority</th>
+      <th>Priority</th>
+      <th>Type</th>
+      <th>Assigned to</th>
+      <th>Last modified</th>
+      <th>Reported</th>
+    </tr>
+    </thead>
   </table>
 </vaadin-grid>

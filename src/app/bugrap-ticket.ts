@@ -80,8 +80,9 @@ export class BugrapVersion {
 export class BugrapTicketComment {
   id: string;
   created: Date;
-  created_by: string;
+  created_by: BugrapUser;
   description: string;
+  ticket: string;
 }
 
 export class BugrapTicketAttachment {
@@ -91,18 +92,19 @@ export class BugrapTicketAttachment {
 }
 
 export class BugrapTicket {
-  id: string;
-  project: string;
-  version: string;
-  type: BugrapTicketType;
-  status: BugrapTicketStatus;
-  priority: BugrapTicketPriority;
-  summary: string;
-  description: string;
-  reported: Date;
-  last_modified: Date;
-  reported_by: string;
-  assigned_to: string;
-  comments: BugrapTicketComment[];
-  attachments: BugrapTicketAttachment[];
+  constructor(
+    public id?: string,
+    public project?: BugrapProject,
+    public version?: BugrapVersion,
+    public type?: BugrapTicketType,
+    public status?: BugrapTicketStatus,
+    public priority?: BugrapTicketPriority,
+    public summary?: string,
+    public description?: string,
+    public reported?: Date,
+    public last_modified?: Date,
+    public reported_by?: BugrapUser,
+    public assigned_to?: BugrapUser,
+    public comments?: BugrapTicketComment[],
+    public attachments?: BugrapTicketAttachment[]) {}
 }

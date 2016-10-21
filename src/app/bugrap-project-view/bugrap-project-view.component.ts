@@ -97,7 +97,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
     if (changes['project']) {
       let change = changes['project'];
 
-      this.backend.getVersions(this.project).then(versions => {
+      this.backend.getVersionNames(this.project).then(versions => {
         this.versions = versions;
         if (this.versions.length > 1) {
           this.versions.unshift(this.ALL_VERSIONS);
@@ -119,15 +119,15 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
 
   updateTicketCounts() {
     // NOTE: here it might make sense to offload the counting logic off to the backend for higher efficiency
-    this.backend.getTickets().then(tickets => {
+    this.backend.getTickets().then((tickets: BugrapTicket[]) => {
       let result: { closed: number, assigned: number, unassigned: number } = {
         closed: 0,
         assigned: 0,
         unassigned: 0
       };
 
-      tickets.forEach(ticket => {
-        if (ticket.project != this.project || (this.version != this.ALL_VERSIONS && ticket.version != this.version)) {
+      tickets.forEach((ticket: BugrapTicket) => {
+        if (ticket.project.name != this.project || (this.version != this.ALL_VERSIONS && ticket.version.name != this.version)) {
           // return counts only for the tickets in the selected version of the current project
           return;
         }
@@ -198,13 +198,13 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
     // 1. do the filtering on the backend to save both on client CPU utilization and on traffic
     // 2. do the slicing together with filtering to save even more on CPU and traffic
 
-    this.backend.getTickets().then(tickets => {
+    this.backend.getTickets().then((tickets: BugrapTicket[]) => {
       // Find all tickets that match the current filters for project, version, assigned_to and status
-      this.tickets = tickets.filter(ticket => {
-        let projectMatch = ticket.project == this.project;
-        let versionMatch = this.version == this.ALL_VERSIONS || ticket.version == this.version;
+      this.tickets = tickets.filter((ticket: BugrapTicket) => {
+        let projectMatch = ticket.project.name == this.project;
+        let versionMatch = this.version == this.ALL_VERSIONS || ticket.version.name == this.version;
         let assignedToMatch = this.assignedToFilter == this.ASSIGNED_TO_ALL ||
-          ticket.assigned_to == this.user.name;
+          ticket.assigned_to.id == this.user.id;
         let statusMatch = this.statusFilter == this.STATUS_ALL ||
           (this.statusFilter == this.STATUS_OPEN && ticket.status == BugrapTicketStatus.Open) ||
           (this.statusFilter == this.STATUS_CUSTOM && this.customStatusFilter.indexOf(ticket.status) > -1);
@@ -213,7 +213,7 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
         let searchMatch = this.searchFilter == '' ||
           searchFilterRegExp.test(ticket.summary) ||
           searchFilterRegExp.test(ticket.description) ||
-          searchFilterRegExp.test(ticket.assigned_to);
+          searchFilterRegExp.test(ticket.assigned_to.name);
         return projectMatch && versionMatch && assignedToMatch && statusMatch && searchMatch;
       });
 
@@ -226,9 +226,18 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
             let sort = sortOrder[i];
             let lesser = sort.direction == 'asc' ? -1 : 1;
             let property = grid.columns[sort.column].name;
+            let aValue = a[property];
+            let bValue = b[property];
+            if (property == 'assigned_to.name') {
+              aValue = a.assigned_to.name;
+              bValue = b.assigned_to.name;
+            } else if (property == 'version.name') {
+              aValue = a.version.name;
+              bValue = b.version.name;
+            }
 
-            if (a[property] < b[property]) return lesser;
-            if (a[property] > b[property]) return -lesser;
+            if (aValue < bValue) return lesser;
+            if (aValue > bValue) return -lesser;
           }
           return 0;
         });
