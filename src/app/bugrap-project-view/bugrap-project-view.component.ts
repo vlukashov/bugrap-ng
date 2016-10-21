@@ -80,19 +80,13 @@ export class BugrapProjectViewComponent implements OnInit, AfterViewInit, OnChan
       grid.columns[5].renderer = dateRenderer;
       grid.columns[6].renderer = dateRenderer;
 
-      let ticketOpened = this.ticketOpened;
-      grid.rowClassGenerator = function(row) {
-        if (!row.element.classList.contains('bugrap-double-click')) {
-          let data = row.data;
-          let index = row.index;
-          row.element.addEventListener('dblclick', function() {
-            grid.selection.clear();
-            grid.selection.select(index);
-            ticketOpened.emit(data);
-          });
-        }
-        return 'bugrap-double-click';
-      };
+      grid.addEventListener('detailed-dblclick', ($event) => {
+        let data = $event.detail.data;
+        let index = $event.detail.row;
+        grid.selection.clear();
+        grid.selection.select(index);
+        this.ticketOpened.emit(data);
+      });
 
       grid.addEventListener('selected-items-changed', () => this.onSelectionChange(grid));
       grid.items = this.getGridItems.bind(this);
