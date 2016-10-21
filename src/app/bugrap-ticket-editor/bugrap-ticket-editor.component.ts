@@ -221,17 +221,21 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit, OnIn
 
   addAttachment(file) {
     let attachment = new BugrapTicketAttachment();
+    attachment.ticket = this.ticket.id;
+    attachment.created = new Date();
     attachment.name = file.name;
     attachment.url = '/';
-    this.ticket.attachments.push(attachment);
-    this.tickets[0].attachments = this.ticket.attachments;
-    this.backend.updateTicket(this.ticket);
+    this.backend.addAttachment(attachment).then((id: string) => {
+      attachment.id = id;
+      this.ticket.attachments.push(attachment);
+      this.tickets[0].attachments = this.ticket.attachments;
+    });
   }
 
   removeAttachment(attachment: BugrapTicketAttachment) {
     this.ticket.attachments = this.ticket.attachments.filter(att => att !== attachment);
     this.tickets[0].attachments = this.ticket.attachments;
-    this.backend.updateTicket(this.ticket);
+    this.backend.removeAttachment(attachment.id);
   }
 
   private static _arrayEquals(arr1: Array<any>, arr2: Array<any>): boolean {

@@ -135,7 +135,13 @@ export class BugrapBackendService {
           attachment.id = fbAttachment.$key;
           attachment.name = fbAttachment.name;
           attachment.url = fbAttachment.url;
+          attachment.created = fbAttachment.created ? new Date(fbAttachment.created) : null;
+          attachment.ticket = fbAttachment.ticket;
           return attachment;
+        }).sort((a: BugrapTicketAttachment, b: BugrapTicketAttachment) => {
+          if (a.created < b.created) return -1;
+          if (a.created > b.created) return 1;
+          return 0;
         }));
       });
     });
@@ -188,6 +194,23 @@ export class BugrapBackendService {
       message: comment.description,
       ticket: comment.ticket
     });
+  }
+
+  addAttachment(attachment: BugrapTicketAttachment): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.af.database.list('/attachments').push({
+        created: attachment.created.toJSON(),
+        name: attachment.name,
+        url: attachment.url,
+        ticket: attachment.ticket
+      }).then(result => {
+        resolve(result.key);
+      });
+    });
+  }
+
+  removeAttachment(attachmentId: string) {
+    this.af.database.list('/attachments').remove(attachmentId);
   }
 
   getProjects(): Promise<string[]> {

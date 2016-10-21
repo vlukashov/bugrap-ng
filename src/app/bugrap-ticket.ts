@@ -89,6 +89,8 @@ export class BugrapTicketAttachment {
   id: string;
   name: string;
   url: string;
+  created: Date;
+  ticket: string;
 }
 
 export class BugrapTicket {
