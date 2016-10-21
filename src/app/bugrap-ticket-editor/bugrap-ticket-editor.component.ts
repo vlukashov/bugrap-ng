@@ -209,22 +209,53 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit, OnIn
     this.refreshTickets();
   }
 
-  onUploadCompleted($event) {
+  onUploadStarting($event) {
     // add the uploaded file as a new attachment to the ticket being open in the modal editor
     let file = $event.detail.file;
-    this.modalEditor.addAttachment(file);
+    let uploadTask = this.backend.uploadFile($event.detail.file);
+    let that = this;
 
+    // Register three observers:
+    // 1. 'state_changed' observer, called any time the state changes
+    // 2. Error observer, called on failure
+    // 3. Completion observer, called on successful completion
+    uploadTask.on('state_changed', function(snapshot) {
+      // Observe state change events such as progress, pause, and resume
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+      switch (snapshot.state) {
+        case firebase.storage.TaskState.PAUSED: // or 'paused'
+          console.log('Upload is paused');
+          break;
+        case firebase.storage.TaskState.RUNNING: // or 'running'
+          console.log('Upload is running');
+          break;
+      }
+    }, function(error) {
+      console.log(`error while uploading: ${error}`);
+    }, function() {
+      // Handle successful uploads on complete
+      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+      var downloadURL = uploadTask.snapshot.downloadURL;
+      console.log(`uploaded successfully, URL: ${downloadURL}`);
+      that.modalEditor.addAttachment(file, uploadTask.snapshot.downloadURL);
+    });
+  }
+
+  onUploadCompleted($event) {
     // remove the uploaded file from the vaadin-upload control
+    let file = $event.detail.file;
     let upload = $event.target;
     upload.files = upload.files.filter(f => f !== file);
   }
 
-  addAttachment(file) {
+  addAttachment(file: File, url: string) {
     let attachment = new BugrapTicketAttachment();
     attachment.ticket = this.ticket.id;
     attachment.created = new Date();
     attachment.name = file.name;
-    attachment.url = '/';
+    attachment.url = url;
     this.backend.addAttachment(attachment).then((id: string) => {
       attachment.id = id;
       this.ticket.attachments.push(attachment);
@@ -235,7 +266,7 @@ export class BugrapTicketEditorComponent implements DoCheck, AfterViewInit, OnIn
   removeAttachment(attachment: BugrapTicketAttachment) {
     this.ticket.attachments = this.ticket.attachments.filter(att => att !== attachment);
     this.tickets[0].attachments = this.ticket.attachments;
-    this.backend.removeAttachment(attachment.id);
+    this.backend.removeAttachment(attachment);
   }
 
   private static _arrayEquals(arr1: Array<any>, arr2: Array<any>): boolean {

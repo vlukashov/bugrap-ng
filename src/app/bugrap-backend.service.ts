@@ -1,8 +1,9 @@
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operator/map';
 
-import { Injectable } from '@angular/core';
-import { AngularFire } from 'angularfire2';
+import {Injectable, Inject} from '@angular/core';
+import * as firebase from 'firebase';
+import {AngularFire, FirebaseApp} from 'angularfire2';
 
 import {
   BugrapTicket, BugrapVersion, BugrapProject, BugrapTicketPriority, BugrapTicketType,
@@ -23,8 +24,10 @@ export class BugrapBackendService {
   private ticketsSubscription: Subscription;
   private tickets: Promise<BugrapTicket[]>;
 
-  /* @Inject(FirebaseApp) private fbApp: firebase.app.App */
-  constructor(private af: AngularFire) {
+  /*  */
+  constructor(@Inject(FirebaseApp) private fbApp: firebase.app.App,
+              private af: AngularFire)
+  {
     this.users = new Promise((resolve, reject) => {
       this.usersSubscription = this.getUsersObservable().subscribe(users => resolve(users));
     });
@@ -196,6 +199,11 @@ export class BugrapBackendService {
     });
   }
 
+  uploadFile(file: File) {
+    let root = this.fbApp.storage().ref();
+    return root.child(`attachments/${new Date().getTime()}-${file.name}`).put(file);
+  }
+
   addAttachment(attachment: BugrapTicketAttachment): Promise<string> {
     return new Promise((resolve, reject) => {
       this.af.database.list('/attachments').push({
@@ -209,8 +217,11 @@ export class BugrapBackendService {
     });
   }
 
-  removeAttachment(attachmentId: string) {
-    this.af.database.list('/attachments').remove(attachmentId);
+  removeAttachment(attachment: BugrapTicketAttachment) {
+    let url = attachment.url;
+    this.af.database.list('/attachments').remove(attachment.id).then(() => {
+      this.fbApp.storage().refFromURL(url).delete();
+    });
   }
 
   getProjects(): Promise<string[]> {

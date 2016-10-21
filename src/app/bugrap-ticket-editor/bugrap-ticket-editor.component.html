@@ -4,7 +4,9 @@
     <bugrap-ticket-editor #modalEditor modal="true" [tickets]="tickets" (tickets-edited)="onModalTicketsEdited($event)"></bugrap-ticket-editor>
   </paper-dialog-scrollable>
   <div class="buttons">
-    <vaadin-upload target="http://mockbin.com/request" (upload-success)="onUploadCompleted($event)"></vaadin-upload>
+    <vaadin-upload target="http://mockbin.com/request"
+                   (upload-success)="onUploadCompleted($event)"
+                   (upload-before)="onUploadStarting($event)"></vaadin-upload>
     <div class="extender"></div>
     <paper-button dialog-dismiss>Cancel</paper-button>
     <paper-button dialog-confirm autofocus>Done</paper-button>
